@@ -36,6 +36,9 @@ public class Account {
     @ManyToOne
     private Department department;
 
+    @ManyToMany
+    private List<Notification> notifications;
+
     private Date createdAt;
     private Date updatedAt;
 }

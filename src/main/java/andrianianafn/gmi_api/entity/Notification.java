@@ -1,5 +1,6 @@
 package andrianianafn.gmi_api.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -25,6 +27,10 @@ public class Notification {
     private Department newDepartment;
     @ManyToOne
     private Department lastDepartment;
+
+    @ManyToMany
+    @JsonIgnore
+    private List<Account> concernedAccounts;
 
     private Date createdAt;
     private Date updatedAt;

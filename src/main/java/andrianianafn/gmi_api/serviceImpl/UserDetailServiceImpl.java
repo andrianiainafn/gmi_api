@@ -1,4 +1,4 @@
-package andrianianafn.gmi_api.service;
+package andrianianafn.gmi_api.serviceImpl;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
