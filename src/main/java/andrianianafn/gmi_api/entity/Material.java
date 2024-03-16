@@ -2,6 +2,7 @@ package andrianianafn.gmi_api.entity;
 
 import andrianianafn.gmi_api.enums.State;
 import andrianianafn.gmi_api.enums.Status;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,6 +25,7 @@ public class Material {
     private String materialName;
     private String serialNumber;
     private String description;
+    private String actualStatus;
     private State state;
 
     @ManyToOne
@@ -31,6 +33,9 @@ public class Material {
     @OneToMany
     @Cascade (CascadeType.ALL)
     private List<History> histories;
+    @ManyToOne
+    @JsonIgnore
+    private MaintenanceRequest maintenanceRequest;
 
     private Date createdAt;
     private Date updatedAt;
