@@ -6,4 +6,7 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 @RepositoryRestResource
 public interface AccountRepository extends JpaRepository<Account,String> {
+
+    Account findAccountByEmail(String email);
+    Account findAccountByAccountId(String accountId);
 }
