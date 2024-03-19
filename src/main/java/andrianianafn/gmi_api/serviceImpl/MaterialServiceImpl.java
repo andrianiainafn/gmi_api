@@ -1,6 +1,7 @@
 package andrianianafn.gmi_api.serviceImpl;
 
 import andrianianafn.gmi_api.dto.request.MaterialRequestDto;
+import andrianianafn.gmi_api.dto.response.MaterialStatDto;
 import andrianianafn.gmi_api.entity.Material;
 import andrianianafn.gmi_api.entity.MaterialStatus;
 import andrianianafn.gmi_api.repository.MaterialRepository;
@@ -39,5 +40,10 @@ public class MaterialServiceImpl implements MaterialService {
     @Override
     public List<Material> getMaterialList(String status) {
         return materialRepository.findByActualStatus(status);
+    }
+
+    @Override
+    public List<MaterialStatDto> getMaterialStatList() {
+        return materialRepository.findStatMaterial();
     }
 }

@@ -20,6 +20,7 @@ public class Notification {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String notificationId;
     private boolean isRead;
+    private String notificationType;
 
     @ManyToOne
     private Account account;

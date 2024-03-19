@@ -1,7 +1,9 @@
 package andrianianafn.gmi_api.serviceImpl;
 
 import andrianianafn.gmi_api.dto.request.LoginDto;
+import andrianianafn.gmi_api.dto.request.ProviderRequestDto;
 import andrianianafn.gmi_api.dto.response.AuthResponseDto;
+import andrianianafn.gmi_api.dto.response.ProviderResponseDto;
 import andrianianafn.gmi_api.entity.Account;
 import andrianianafn.gmi_api.exceptions.RessourceNotFoundException;
 import andrianianafn.gmi_api.repository.AccountRepository;
@@ -60,7 +62,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public AuthResponseDto loginPassion(LoginDto loginPassionDto) throws RessourceNotFoundException {
+    public AuthResponseDto login(LoginDto loginPassionDto) throws RessourceNotFoundException {
         String token = "";
         String accountId ="";
         String subject = "";
@@ -96,6 +98,30 @@ public class AuthServiceImpl implements AuthService {
                 .profileUrl(account.getProfileUrl())
                 .firstname(account.getFirstname())
                 .refreshToken(this.generateRefreshToken("",Instant.now(),subject))
+                .build();
+    }
+
+    @Override
+    public ProviderResponseDto usersProvider(ProviderRequestDto providerRequestDto) {
+        Account account;
+        account = accountRepository.findAccountByEmail(providerRequestDto.getEmail());
+        if(account == null){
+            account = Account.builder()
+                    .email(providerRequestDto.getEmail())
+                    .firstname(providerRequestDto.getFirstname())
+                    .lastname(providerRequestDto.getLastname())
+                    .profileUrl(providerRequestDto.getProfileUrl())
+                    .providerType(providerRequestDto.getProviderType())
+                    .build();
+            Account accountSaved = accountRepository.save(account);
+            return  ProviderResponseDto.builder()
+                    .token(this.generateToken("",accountSaved.getEmail(),Instant.now(),true,accountSaved.getAccountId()))
+                    .refreshToken(this.generateRefreshToken("",Instant.now(),accountSaved.getEmail()))
+                    .build();
+        }
+        return  ProviderResponseDto.builder()
+                .token(this.generateToken("",account.getEmail(),Instant.now(),true,account.getAccountId()))
+                .refreshToken(this.generateRefreshToken("",Instant.now(),account.getEmail()))
                 .build();
     }
 }

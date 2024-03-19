@@ -1,6 +1,7 @@
 package andrianianafn.gmi_api.controller;
 
 import andrianianafn.gmi_api.dto.request.MaterialRequestDto;
+import andrianianafn.gmi_api.dto.response.MaterialStatDto;
 import andrianianafn.gmi_api.entity.Material;
 import andrianianafn.gmi_api.service.MaterialService;
 import org.springframework.http.HttpStatus;
@@ -28,5 +29,10 @@ public class MaterialController {
     @GetMapping
     public ResponseEntity<List<Material>> getMaterialList(@RequestParam String status){
         return new ResponseEntity<>(materialService.getMaterialList(status),HttpStatus.OK);
+    }
+
+    @GetMapping("/stat")
+    public  ResponseEntity<List<MaterialStatDto>> getMaterialStat(){
+        return new ResponseEntity<>(materialService.getMaterialStatList(),HttpStatus.OK);
     }
 }
