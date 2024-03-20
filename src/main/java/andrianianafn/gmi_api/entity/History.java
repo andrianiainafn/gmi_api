@@ -1,5 +1,6 @@
 package andrianianafn.gmi_api.entity;
 
+import andrianianafn.gmi_api.enums.MovementType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,9 +17,12 @@ import java.util.Date;
 public class History {
     @Id @GeneratedValue(strategy = GenerationType.UUID)
     private String historyId;
+    private MovementType movementType;
 
     @ManyToOne
-    private Account account;
+    private Account accountDoing;
+    @ManyToOne
+    private Account accountAffected;
     @ManyToOne
     private Material material;
     @ManyToOne

@@ -1,7 +1,7 @@
 package andrianianafn.gmi_api.controller;
 
 import andrianianafn.gmi_api.dto.request.MaterialRequestDto;
-import andrianianafn.gmi_api.dto.response.MaterialStatDto;
+import andrianianafn.gmi_api.dto.response.MaterialStatResponseDto;
 import andrianianafn.gmi_api.entity.Material;
 import andrianianafn.gmi_api.service.MaterialService;
 import org.springframework.http.HttpStatus;
@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/api/material")
 public class MaterialController {
 
@@ -32,7 +33,7 @@ public class MaterialController {
     }
 
     @GetMapping("/stat")
-    public  ResponseEntity<List<MaterialStatDto>> getMaterialStat(){
-        return new ResponseEntity<>(materialService.getMaterialStatList(),HttpStatus.OK);
+    public  ResponseEntity<MaterialStatResponseDto> getMaterialStat(){
+        return new ResponseEntity<>(materialService.getMaterialStat(),HttpStatus.OK);
     }
 }
