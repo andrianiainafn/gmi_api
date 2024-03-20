@@ -5,6 +5,6 @@ import org.springframework.data.rest.core.config.Projection;
 
 @Projection(types = {Role.class},name = "pr")
 public interface RoleProjection {
-    String geRoleId();
+    String getRoleId();
     String getRoleName();
 }
