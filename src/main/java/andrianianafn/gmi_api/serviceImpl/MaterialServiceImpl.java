@@ -2,6 +2,7 @@ package andrianianafn.gmi_api.serviceImpl;
 
 import andrianianafn.gmi_api.dto.request.MaterialRequestDto;
 import andrianianafn.gmi_api.dto.response.MaterialStatDto;
+import andrianianafn.gmi_api.dto.response.MaterialStatResponseDto;
 import andrianianafn.gmi_api.entity.Material;
 import andrianianafn.gmi_api.entity.MaterialStatus;
 import andrianianafn.gmi_api.repository.MaterialRepository;
@@ -43,7 +44,10 @@ public class MaterialServiceImpl implements MaterialService {
     }
 
     @Override
-    public List<MaterialStatDto> getMaterialStatList() {
-        return materialRepository.findStatMaterial();
+    public MaterialStatResponseDto getMaterialStat() {
+        return MaterialStatResponseDto.builder()
+                .materialNumber(materialRepository.getMaterialNumber())
+                .materialStats(materialRepository.findStatMaterial())
+                .build();
     }
 }
