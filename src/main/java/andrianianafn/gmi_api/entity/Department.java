@@ -26,10 +26,10 @@ public class Department {
     @Cascade(CascadeType.ALL)
     private List<Account> accounts;
 
-    @OneToMany(mappedBy = "newDepartment")
-    @JsonIgnore
-    @Cascade(CascadeType.ALL)
-    private List<History> histories;
+//    @OneToMany(mappedBy = "newDepartment")
+//    @JsonIgnore
+//    @Cascade(CascadeType.ALL)
+//    private List<History> histories;
 
     private Date createdAt;
     private Date updatedAt;

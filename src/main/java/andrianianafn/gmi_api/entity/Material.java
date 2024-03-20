@@ -29,6 +29,8 @@ public class Material {
     private State state;
 
     @ManyToOne
+    private Account account;
+    @ManyToOne
     private MaterialStatus materialStatus;
     @OneToMany
     @Cascade (CascadeType.ALL)

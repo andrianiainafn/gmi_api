@@ -22,13 +22,15 @@ public class History {
     @ManyToOne
     private Account accountDoing;
     @ManyToOne
+    private Account lastAccount;
+    @ManyToOne
     private Account accountAffected;
     @ManyToOne
     private Material material;
-    @ManyToOne
-    private Department lastDepartment;
-    @ManyToOne
-    private Department newDepartment;
+//    @ManyToOne
+//    private Department lastDepartment;
+//    @ManyToOne
+//    private Department newDepartment;
 
     private Date mouvementDate;
     private Date updatedAt;

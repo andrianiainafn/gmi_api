@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Stream;
 
 @Service
 @Transactional
@@ -43,6 +44,9 @@ public class AccountServiceImpl implements AccountService {
                 .roles(roles)
                 .department(department)
                 .build();
-        accountRepository.save(account);
+         Account accountSaved =  accountRepository.save(account);
+         roles.stream().map(role -> {
+             return role.getAccount().add(accountSaved);
+         });
     }
 }
