@@ -27,10 +27,13 @@ public class Account {
     private String providerType;
 
     @OneToMany
+    @Cascade(CascadeType.ALL)
+    private List<Material> materials;
+    @OneToMany
     @Cascade (CascadeType.ALL)
     private List<Role> roles;
 
-    @OneToMany
+    @ManyToMany
     @Cascade (CascadeType.ALL)
     private List<Request> requests;
     @ManyToOne

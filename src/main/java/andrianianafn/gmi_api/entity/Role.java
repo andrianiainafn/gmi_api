@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -18,8 +19,8 @@ public class Role {
     private String roleId;
     private String roleName;
 
-    @ManyToOne
-    private Account account;
+    @ManyToMany
+    private List<Account> account;
 
     private Date createdAt;
     private Date updatedAt;
