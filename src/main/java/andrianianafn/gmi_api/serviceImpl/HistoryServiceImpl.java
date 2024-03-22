@@ -1,6 +1,8 @@
 package andrianianafn.gmi_api.serviceImpl;
 
 import andrianianafn.gmi_api.dto.request.HistoryRequestDto;
+import andrianianafn.gmi_api.dto.response.AccountInfoResponseDto;
+import andrianianafn.gmi_api.dto.response.HistoryResponseDto;
 import andrianianafn.gmi_api.entity.Account;
 import andrianianafn.gmi_api.entity.History;
 import andrianianafn.gmi_api.entity.Material;
@@ -30,7 +32,7 @@ public class HistoryServiceImpl implements HistoryService {
     }
 
     @Override
-    public History createNewMovement(HistoryRequestDto historyRequestDto,String token) {
+    public HistoryResponseDto createNewMovement(HistoryRequestDto historyRequestDto, String token) {
         Material material = materialRepository.findById(historyRequestDto.getMaterialId()).orElse(null);
         Account accountReceived = accountRepository.findById(historyRequestDto.getAccountReceivedId()).orElse(null);
         Account accountDoing = accountRepository.findById(authService.decodeToken(token)).orElse(null);
@@ -47,6 +49,13 @@ public class HistoryServiceImpl implements HistoryService {
                 .updatedAt(new Date())
                 .movementType(historyRequestDto.getMovementType())
                 .build();
-        return historyRepository.save(history);
+       History historySaved =  historyRepository.save(history);
+        return HistoryResponseDto.builder()
+                .historyId(historySaved.getHistoryId())
+                .accountAffected(AccountInfoResponseDto.fromAccount(historySaved.getAccountAffected()))
+                .accountDoing(AccountInfoResponseDto.fromAccount(historySaved.getAccountDoing()))
+                .accountAffected(AccountInfoResponseDto.fromAccount(historySaved.getAccountAffected()))
+                .movementType(historySaved.getMovementType())
+                .build();
     }
 }

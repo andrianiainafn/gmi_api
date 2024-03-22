@@ -1,8 +1,8 @@
 package andrianianafn.gmi_api.service;
 
 import andrianianafn.gmi_api.dto.request.HistoryRequestDto;
-import andrianianafn.gmi_api.entity.History;
+import andrianianafn.gmi_api.dto.response.HistoryResponseDto;
 
 public interface HistoryService {
-    History createNewMovement(HistoryRequestDto historyRequestDto,String token);
+    HistoryResponseDto createNewMovement(HistoryRequestDto historyRequestDto, String token);
 }
