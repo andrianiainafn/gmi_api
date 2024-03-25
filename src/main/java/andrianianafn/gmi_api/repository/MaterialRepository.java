@@ -2,6 +2,8 @@ package andrianianafn.gmi_api.repository;
 
 import andrianianafn.gmi_api.dto.response.MaterialStatDto;
 import andrianianafn.gmi_api.entity.Material;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
@@ -12,7 +14,7 @@ import java.util.List;
 @RepositoryRestResource
 @CrossOrigin("*")
 public interface MaterialRepository extends JpaRepository<Material,String> {
-    List<Material> findByActualStatus(String actualStatus);
+    Page<Material> findByActualStatus(String actualStatus, Pageable pageable);
 
     @Query("SELECT count(*) from Material ")
     Long getMaterialNumber();

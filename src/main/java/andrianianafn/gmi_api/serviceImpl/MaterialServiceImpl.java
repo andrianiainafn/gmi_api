@@ -9,6 +9,9 @@ import andrianianafn.gmi_api.repository.MaterialRepository;
 import andrianianafn.gmi_api.repository.MaterialStatusRepository;
 import andrianianafn.gmi_api.service.MaterialService;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -39,8 +42,15 @@ public class MaterialServiceImpl implements MaterialService {
     }
 
     @Override
-    public List<Material> getMaterialList(String status) {
-        return materialRepository.findByActualStatus(status);
+    public List<Material> getMaterialList(String status,int page,int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Page<Material> materialPage = null;
+        if(status.equals("All")){
+            materialPage = materialRepository.findAll(pageRequest);
+        }else{
+             materialPage = materialRepository.findByActualStatus(status,pageRequest);
+        }
+        return materialPage.getContent();
     }
 
     @Override

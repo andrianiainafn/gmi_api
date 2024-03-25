@@ -9,7 +9,7 @@ import java.util.List;
 public interface MaterialService {
     void createNewMaterial(MaterialRequestDto materialRequestDto);
 
-    List<Material> getMaterialList(String status);
+    List<Material> getMaterialList(String status,int page,int size);
 
     MaterialStatResponseDto getMaterialStat();
 }
