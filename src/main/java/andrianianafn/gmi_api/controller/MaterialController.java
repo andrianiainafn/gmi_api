@@ -28,8 +28,8 @@ public class MaterialController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Material>> getMaterialList(@RequestParam String status){
-        return new ResponseEntity<>(materialService.getMaterialList(status),HttpStatus.OK);
+    public ResponseEntity<List<Material>> getMaterialList(@RequestParam String status,@RequestParam(defaultValue = "0") int page,@RequestParam(defaultValue = "10") int size){
+        return new ResponseEntity<>(materialService.getMaterialList(status,page,size),HttpStatus.OK);
     }
 
     @GetMapping("/stat")
