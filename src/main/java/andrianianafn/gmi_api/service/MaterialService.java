@@ -7,7 +7,7 @@ import andrianianafn.gmi_api.entity.Material;
 import java.util.List;
 
 public interface MaterialService {
-    void createNewMaterial(MaterialRequestDto materialRequestDto);
+    Material createNewMaterial(MaterialRequestDto materialRequestDto);
 
     List<Material> getMaterialList(String status,int page,int size);
 

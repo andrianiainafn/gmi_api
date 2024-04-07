@@ -28,7 +28,7 @@ public class MaterialServiceImpl implements MaterialService {
     }
 
     @Override
-    public void createNewMaterial(MaterialRequestDto materialRequestDto) {
+    public Material createNewMaterial(MaterialRequestDto materialRequestDto) {
         MaterialStatus materialStatus = materialStatusRepository.getReferenceById(materialRequestDto.getStatusId());
         Material material = Material.builder()
                 .materialName(materialRequestDto.getMaterialName())
@@ -38,7 +38,16 @@ public class MaterialServiceImpl implements MaterialService {
                 .actualStatus(materialStatus.getMaterialStatusName())
                 .materialStatus(materialStatus)
                 .build();
-        materialRepository.save(material);
+        Material materialSaved = materialRepository.save(material);
+        return  Material.builder()
+                .materialId(materialSaved.getMaterialId())
+                .materialName(materialSaved.getMaterialName())
+                .description(materialSaved.getDescription())
+                .actualStatus(materialSaved.getActualStatus())
+                .serialNumber(materialSaved.getSerialNumber())
+                .createdAt(materialSaved.getCreatedAt())
+                .account(materialSaved.getAccount())
+                .build();
     }
 
     @Override

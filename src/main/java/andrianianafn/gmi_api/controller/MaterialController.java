@@ -22,9 +22,9 @@ public class MaterialController {
     }
 
     @PostMapping
-    public ResponseEntity<String> createNewMaterial(@RequestBody MaterialRequestDto materialRequestDto){
-        materialService.createNewMaterial(materialRequestDto);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    public ResponseEntity<Material> createNewMaterial(@RequestBody MaterialRequestDto materialRequestDto){
+        Material newMaterial = materialService.createNewMaterial(materialRequestDto);
+        return new ResponseEntity<>(newMaterial,HttpStatus.CREATED);
     }
 
     @GetMapping
