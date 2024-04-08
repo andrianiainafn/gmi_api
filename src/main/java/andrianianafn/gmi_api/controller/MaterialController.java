@@ -28,7 +28,7 @@ public class MaterialController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Material>> getMaterialList(@RequestParam String status,@RequestParam(defaultValue = "0") int page,@RequestParam(defaultValue = "10") int size){
+    public ResponseEntity<List<Material>> getMaterialList(@RequestParam String status,@RequestParam(defaultValue = "0") int page,@RequestParam(defaultValue = "5") int size){
         return new ResponseEntity<>(materialService.getMaterialList(status,page,size),HttpStatus.OK);
     }
 
