@@ -45,6 +45,9 @@ public class MaterialServiceImpl implements MaterialService {
                 .description(materialSaved.getDescription())
                 .actualStatus(materialSaved.getActualStatus())
                 .serialNumber(materialSaved.getSerialNumber())
+                .histories(materialSaved.getHistories())
+                .materialStatus(materialSaved.getMaterialStatus())
+                .updatedAt(materialSaved.getUpdatedAt())
                 .createdAt(materialSaved.getCreatedAt())
                 .account(materialSaved.getAccount())
                 .build();
