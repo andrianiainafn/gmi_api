@@ -36,4 +36,9 @@ public class MaterialController {
     public  ResponseEntity<MaterialStatResponseDto> getMaterialStat(){
         return new ResponseEntity<>(materialService.getMaterialStat(),HttpStatus.OK);
     }
+
+    @GetMapping("/page_size")
+    public ResponseEntity<Long> getPageSize(){
+        return new ResponseEntity<>(materialService.getTotalPage(),HttpStatus.OK);
+    }
 }

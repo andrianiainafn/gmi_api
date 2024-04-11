@@ -12,4 +12,6 @@ public interface MaterialService {
     List<Material> getMaterialList(String status,int page,int size);
 
     MaterialStatResponseDto getMaterialStat();
+
+    Long getTotalPage();
 }

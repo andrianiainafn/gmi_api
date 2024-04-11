@@ -14,6 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -35,6 +36,8 @@ public class MaterialServiceImpl implements MaterialService {
                 .description(materialRequestDto.getDescription())
                 .serialNumber(materialRequestDto.getSerialNumber())
                 .state(materialRequestDto.getState())
+                .createdAt(new Date())
+                .updatedAt(new Date())
                 .actualStatus(materialStatus.getMaterialStatusName())
                 .materialStatus(materialStatus)
                 .build();
@@ -45,8 +48,6 @@ public class MaterialServiceImpl implements MaterialService {
                 .description(materialSaved.getDescription())
                 .actualStatus(materialSaved.getActualStatus())
                 .serialNumber(materialSaved.getSerialNumber())
-                .histories(materialSaved.getHistories())
-                .materialStatus(materialSaved.getMaterialStatus())
                 .updatedAt(materialSaved.getUpdatedAt())
                 .createdAt(materialSaved.getCreatedAt())
                 .account(materialSaved.getAccount())
@@ -58,9 +59,9 @@ public class MaterialServiceImpl implements MaterialService {
         PageRequest pageRequest = PageRequest.of(page, size);
         Page<Material> materialPage = null;
         if(status.equals("All")){
-            materialPage = materialRepository.findAll(pageRequest);
+            materialPage = materialRepository.findAllByOrderByCreatedAt(pageRequest);
         }else{
-             materialPage = materialRepository.findByActualStatus(status,pageRequest);
+             materialPage = materialRepository.findByActualStatusOrderByCreatedAt(status,pageRequest);
         }
         return materialPage.getContent();
     }
@@ -71,5 +72,10 @@ public class MaterialServiceImpl implements MaterialService {
                 .materialNumber(materialRepository.getMaterialNumber())
                 .materialStats(materialRepository.findStatMaterial())
                 .build();
+    }
+
+    @Override
+    public Long getTotalPage() {
+        return materialRepository.count();
     }
 }

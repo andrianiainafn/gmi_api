@@ -14,7 +14,9 @@ import java.util.List;
 @RepositoryRestResource
 @CrossOrigin("*")
 public interface MaterialRepository extends JpaRepository<Material,String> {
-    Page<Material> findByActualStatus(String actualStatus, Pageable pageable);
+    Page<Material> findByActualStatusOrderByCreatedAt(String actualStatus, Pageable pageable);
+
+    Page<Material> findAllByOrderByCreatedAt(Pageable pageable);
 
     @Query("SELECT count(*) from Material ")
     Long getMaterialNumber();
