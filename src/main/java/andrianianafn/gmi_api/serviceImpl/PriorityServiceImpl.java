@@ -1,6 +1,6 @@
 package andrianianafn.gmi_api.serviceImpl;
 
-import andrianianafn.gmi_api.entity.Priority;
+import andrianianafn.gmi_api.entity.RequestPriority;
 import andrianianafn.gmi_api.repository.PriorityRepository;
 import andrianianafn.gmi_api.service.PriorityService;
 import jakarta.transaction.Transactional;
@@ -18,7 +18,7 @@ public class PriorityServiceImpl implements PriorityService {
     }
 
     @Override
-    public List<Priority> getPriorities() {
+    public List<RequestPriority> getPriorities() {
         return priorityRepository.findAll();
     }
 }
