@@ -1,7 +1,12 @@
 package andrianianafn.gmi_api.service;
 
 import andrianianafn.gmi_api.dto.response.RequestStatDto;
+import andrianianafn.gmi_api.entity.Request;
+
+import java.util.List;
 
 public interface RequestService {
     RequestStatDto getRequestStat();
+
+    List<Request> getRequestList(String priority,int page,int size);
 }

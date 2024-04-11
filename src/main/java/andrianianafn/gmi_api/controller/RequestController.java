@@ -1,13 +1,13 @@
 package andrianianafn.gmi_api.controller;
 
 import andrianianafn.gmi_api.dto.response.RequestStatDto;
+import andrianianafn.gmi_api.entity.Request;
 import andrianianafn.gmi_api.service.RequestService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/request")
@@ -22,5 +22,10 @@ public class RequestController {
     @GetMapping("/stat")
     public ResponseEntity<RequestStatDto> getRequestStat(){
         return  new ResponseEntity<>(requestService.getRequestStat(), HttpStatus.OK);
+    }
+
+    @GetMapping("")
+    public ResponseEntity<List<Request>> getRequestList(@RequestParam("priority") String priority,@RequestParam(defaultValue = "0") int page,@RequestParam(defaultValue = "5") int size){
+        return new ResponseEntity<>(requestService.getRequestList(priority, page, size),HttpStatus.OK);
     }
 }

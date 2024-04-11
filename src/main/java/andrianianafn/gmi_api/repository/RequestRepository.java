@@ -2,6 +2,8 @@ package andrianianafn.gmi_api.repository;
 
 import andrianianafn.gmi_api.dto.response.RequestStatDto;
 import andrianianafn.gmi_api.entity.Request;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
@@ -16,4 +18,7 @@ public interface RequestRepository extends JpaRepository<Request,String> {
             + " FROM Request r")
     RequestStatDto getRequestStat();
 
+    Page<Request> findAllByOrderByCreatedAt(Pageable pageable);
+
+    Page<Request> findAllByPriority_PriorityDesignationOrderByCreatedAt(String priorityDesignation,Pageable pageable);
 }
