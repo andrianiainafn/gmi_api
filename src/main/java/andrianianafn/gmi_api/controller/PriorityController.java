@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import andrianianafn.gmi_api.entity.Priority;
+import andrianianafn.gmi_api.entity.RequestPriority;
 
 import java.util.List;
 
@@ -23,7 +23,7 @@ public class PriorityController {
     }
 
     @GetMapping("")
-    public ResponseEntity<List<Priority>> getPriorityList(){
+    public ResponseEntity<List<RequestPriority>> getPriorityList(){
         return new ResponseEntity<>(priorityService.getPriorities(), HttpStatus.OK);
     }
 }
