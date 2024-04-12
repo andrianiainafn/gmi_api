@@ -20,13 +20,13 @@ public class Request {
     private String requestId;
     private String description;
     private String materialName;
-    private String actualStatus;
+    private String actualPriority;
     private RequestStatus requestStatus;
 
     @ManyToOne
     private Account account;
     @ManyToOne
-    private Priority priority;
+    private RequestPriority priority;
 
     private Date createdAt;
     private Date updatedAt;

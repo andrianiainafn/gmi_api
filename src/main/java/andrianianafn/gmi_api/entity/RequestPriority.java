@@ -13,7 +13,7 @@ import java.util.List;
 @Data
 @Builder
 @Entity
-public class Priority {
+public class RequestPriority {
     @Id @GeneratedValue(strategy = GenerationType.UUID)
     private String priorityId;
     private String priorityDesignation;

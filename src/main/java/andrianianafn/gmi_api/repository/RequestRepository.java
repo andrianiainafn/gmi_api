@@ -18,7 +18,7 @@ public interface RequestRepository extends JpaRepository<Request,String> {
             + " FROM Request r")
     RequestStatDto getRequestStat();
 
-    Page<Request> findAllByOrderByCreatedAt(Pageable pageable);
+    Page<Request> findAllByOrderByCreatedAtDesc(Pageable pageable);
 
-    Page<Request> findAllByPriority_PriorityDesignationOrderByCreatedAt(String priorityDesignation,Pageable pageable);
+    Page<Request> findAllByActualPriorityOrderByCreatedAtDesc(String priorityDesignation,Pageable pageable);
 }
