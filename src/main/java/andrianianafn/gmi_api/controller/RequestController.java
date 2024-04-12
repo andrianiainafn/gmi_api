@@ -1,9 +1,11 @@
 package andrianianafn.gmi_api.controller;
 
+import andrianianafn.gmi_api.dto.request.EditRequestStatusRequest;
 import andrianianafn.gmi_api.dto.request.RequestRequestDto;
 import andrianianafn.gmi_api.dto.response.RequestResponseDto;
 import andrianianafn.gmi_api.dto.response.RequestStatDto;
 import andrianianafn.gmi_api.entity.Request;
+import andrianianafn.gmi_api.enums.RequestStatus;
 import andrianianafn.gmi_api.service.RequestService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -41,5 +43,10 @@ public class RequestController {
             return new ResponseEntity<>(requestService.createNewRequest(requestRequestDto,token),HttpStatus.CREATED);
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+    @PutMapping("/{request-id}")
+    public ResponseEntity<RequestResponseDto> editRequestStatus(@PathVariable ("request-id") String requestId, @RequestBody EditRequestStatusRequest requestStatus){
+        System.out.println(requestStatus);
+        return new ResponseEntity<>(requestService.editRequestStatus(requestId,requestStatus.getRequestStatus()),HttpStatus.OK);
     }
 }

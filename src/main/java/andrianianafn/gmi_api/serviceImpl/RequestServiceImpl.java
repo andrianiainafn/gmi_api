@@ -68,4 +68,11 @@ public class RequestServiceImpl implements RequestService {
                 .build();
         return  requestRepository.save(request);
     }
+
+    @Override
+    public RequestResponseDto editRequestStatus(String requestId,RequestStatus requestStatus) {
+        Request request = requestRepository.findById(requestId).orElse(null);
+        request.setRequestStatus(requestStatus);
+        return RequestResponseDto.fromRequest(requestRepository.save(request));
+    }
 }
