@@ -1,6 +1,7 @@
 package andrianianafn.gmi_api.serviceImpl;
 
 import andrianianafn.gmi_api.dto.request.AccountRequestDto;
+import andrianianafn.gmi_api.dto.response.AccountInfoResponseDto;
 import andrianianafn.gmi_api.entity.Account;
 import andrianianafn.gmi_api.entity.Department;
 import andrianianafn.gmi_api.entity.Role;
@@ -48,5 +49,10 @@ public class AccountServiceImpl implements AccountService {
          roles.stream().map(role -> {
              return role.getAccount().add(accountSaved);
          });
+    }
+
+    @Override
+    public List<AccountInfoResponseDto> getAccountByEmailOrName(String emailOrEmail) {
+        return null;
     }
 }
