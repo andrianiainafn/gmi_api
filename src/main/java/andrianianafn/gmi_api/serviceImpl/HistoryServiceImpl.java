@@ -37,9 +37,9 @@ public class HistoryServiceImpl implements HistoryService {
         Account accountReceived = accountRepository.findById(historyRequestDto.getAccountReceivedId()).orElse(null);
         Account accountDoing = accountRepository.findById(authService.decodeToken(token)).orElse(null);
         Account lastAccount = null;
-        if(material != null){
-            lastAccount = material.getAccount();
-        }
+//        if(material != null){
+//            lastAccount = material.getAccounts();
+//        }
         History history = History.builder()
                 .accountDoing(accountDoing)
                 .accountAffected(accountReceived)
