@@ -28,8 +28,8 @@ public class Material {
     private String actualStatus;
     private State state;
 
-    @ManyToOne
-    private Account account;
+    @OneToMany
+    private List<Account> accounts;
     @ManyToOne
     private MaterialStatus materialStatus;
     @OneToMany

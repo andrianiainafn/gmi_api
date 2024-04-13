@@ -1,5 +1,6 @@
 package andrianianafn.gmi_api.controller;
 
+import andrianianafn.gmi_api.dto.request.EditMaterialRequestDto;
 import andrianianafn.gmi_api.dto.request.MaterialRequestDto;
 import andrianianafn.gmi_api.dto.response.MaterialStatResponseDto;
 import andrianianafn.gmi_api.entity.Material;
@@ -40,5 +41,10 @@ public class MaterialController {
     @GetMapping("/page_size")
     public ResponseEntity<Long> getPageSize(){
         return new ResponseEntity<>(materialService.getTotalPage(),HttpStatus.OK);
+    }
+
+    @PutMapping("/{material-id}")
+    public ResponseEntity<Material> editMaterial(@PathVariable ("material-id") String materialId, @RequestBody EditMaterialRequestDto editMaterialRequestDto){
+        return new ResponseEntity<>(materialService.editMaterial(editMaterialRequestDto,materialId),HttpStatus.OK);
     }
 }
