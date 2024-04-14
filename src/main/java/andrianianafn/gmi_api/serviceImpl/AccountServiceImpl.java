@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
@@ -53,6 +54,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public List<AccountInfoResponseDto> getAccountByEmailOrName(String emailOrEmail) {
-        return null;
+        List<Account> account = accountRepository.findAllByEmailContainingOrFirstnameContainingOrLastnameContaining(emailOrEmail,emailOrEmail,emailOrEmail);
+        return account.stream().map(AccountInfoResponseDto::fromAccount).collect(Collectors.toList());
     }
 }

@@ -4,9 +4,13 @@ import andrianianafn.gmi_api.entity.Account;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
+import java.util.List;
+
 @RepositoryRestResource
 public interface AccountRepository extends JpaRepository<Account,String> {
 
     Account findAccountByEmail(String email);
     Account findAccountByAccountId(String accountId);
+
+    List<Account> findAllByEmailContainingOrFirstnameContainingOrLastnameContaining(String email, String firstname, String lastname);
 }
