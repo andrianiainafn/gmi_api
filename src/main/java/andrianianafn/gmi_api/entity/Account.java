@@ -28,10 +28,10 @@ public class Account {
     private String providerType;
 
     @JsonIgnore
-    @OneToMany
+    @ManyToMany
     @Cascade(CascadeType.ALL)
     private List<Material> materials;
-    @OneToMany
+    @ManyToMany
     @Cascade (CascadeType.ALL)
     private List<Role> roles;
 
