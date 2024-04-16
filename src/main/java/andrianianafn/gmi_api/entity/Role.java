@@ -1,5 +1,6 @@
 package andrianianafn.gmi_api.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,6 +20,7 @@ public class Role {
     private String roleId;
     private String roleName;
 
+    @JsonIgnore
     @ManyToMany
     private List<Account> account;
 

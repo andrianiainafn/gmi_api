@@ -29,6 +29,7 @@ public class RequestResponseDto {
                 .firstname(request.getAccount().getFirstname())
                 .lastname(request.getAccount().getLastname())
                 .roles(request.getAccount().getRoles())
+                .profileUrl(request.getAccount().getProfileUrl())
                 .department(request.getAccount().getDepartment())
                 .build();
         return RequestResponseDto.builder()
