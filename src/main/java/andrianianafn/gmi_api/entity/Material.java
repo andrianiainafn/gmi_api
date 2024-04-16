@@ -28,7 +28,7 @@ public class Material {
     private String actualStatus;
     private State state;
 
-    @OneToMany
+    @ManyToMany
     private List<Account> accounts;
     @ManyToOne
     private MaterialStatus materialStatus;
