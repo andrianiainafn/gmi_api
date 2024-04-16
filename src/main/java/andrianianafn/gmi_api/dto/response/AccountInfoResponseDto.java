@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
 import java.util.List;
 
 @AllArgsConstructor
@@ -20,6 +21,7 @@ public class AccountInfoResponseDto {
     private String lastname;
     private String email;
     private String profileUrl;
+    private Date createdAt;
     private List<Role> roles;
     private Department department;
 
@@ -31,6 +33,7 @@ public class AccountInfoResponseDto {
                 .profileUrl(account.getProfileUrl())
                 .firstname(account.getFirstname())
                 .department(account.getDepartment())
+                .createdAt(account.getCreatedAt())
                 .roles(account.getRoles())
                 .build();
     }
