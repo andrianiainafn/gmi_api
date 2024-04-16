@@ -2,6 +2,7 @@ package andrianianafn.gmi_api.serviceImpl;
 
 import andrianianafn.gmi_api.dto.request.AccountRequestDto;
 import andrianianafn.gmi_api.dto.response.AccountInfoResponseDto;
+import andrianianafn.gmi_api.dto.response.UserListDto;
 import andrianianafn.gmi_api.entity.Account;
 import andrianianafn.gmi_api.entity.Department;
 import andrianianafn.gmi_api.entity.Role;
@@ -9,14 +10,17 @@ import andrianianafn.gmi_api.repository.AccountRepository;
 import andrianianafn.gmi_api.repository.DepartmentRepository;
 import andrianianafn.gmi_api.repository.RoleRepository;
 import andrianianafn.gmi_api.service.AccountService;
+import andrianianafn.gmi_api.service.AuthService;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 @Transactional
@@ -25,36 +29,76 @@ public class AccountServiceImpl implements AccountService {
     private final DepartmentRepository departmentRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AuthService authService;
 
-    public AccountServiceImpl(AccountRepository accountRepository, DepartmentRepository departmentRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+    public AccountServiceImpl(AccountRepository accountRepository, DepartmentRepository departmentRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, AuthService authService) {
         this.accountRepository = accountRepository;
         this.departmentRepository = departmentRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
+        this.authService = authService;
     }
 
     @Override
-    public void createNewAccount(AccountRequestDto accountRequestDto) {
+    public AccountInfoResponseDto createNewAccount(AccountRequestDto accountRequestDto) {
         Department department = departmentRepository.findById(accountRequestDto.getDepartmentId()).orElse(null);
-        List<Role> roles =  roleRepository.findAllByRoleIdIsIn(accountRequestDto.getRolesId());
+        List<Role> roles = roleRepository.findAllById(accountRequestDto.getRolesId());;
         Account account = Account.builder()
                 .createdAt(new Date())
                 .email(accountRequestDto.getEmail())
                 .firstname(accountRequestDto.getFirstname())
                 .lastname(accountRequestDto.getLastname())
                 .password(passwordEncoder.encode(accountRequestDto.getPassword()))
-                .roles(roles)
                 .department(department)
                 .build();
-         Account accountSaved =  accountRepository.save(account);
-         roles.stream().map(role -> {
-             return role.getAccount().add(accountSaved);
-         });
+        if (account.getRoles() != null) {
+            account.getRoles().addAll(roles);
+        }else{
+            account.setRoles(roles);
+        }
+        Account accountSaved =  accountRepository.save(account);
+        roles.forEach(role -> {
+            role.getAccount().add(accountSaved);
+        });
+
+         return AccountInfoResponseDto.fromAccount(accountSaved);
     }
 
     @Override
     public List<AccountInfoResponseDto> getAccountByEmailOrName(String emailOrEmail) {
         List<Account> account = accountRepository.findAllByEmailContainingOrFirstnameContainingOrLastnameContaining(emailOrEmail,emailOrEmail,emailOrEmail);
         return account.stream().map(AccountInfoResponseDto::fromAccount).collect(Collectors.toList());
+    }
+
+    @Override
+    public AccountInfoResponseDto getAccountInfo(String token) {
+        Account account = accountRepository.findById(authService.decodeToken(token)).orElse(null);
+        if (account == null) {
+            return null;
+        }
+        return AccountInfoResponseDto.fromAccount(account);
+    }
+
+    @Override
+    public UserListDto getUserList(int page, int size,String token) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        List<Account> accounts = accountRepository.findAllByAccountIdIsNot(authService.decodeToken(token), pageRequest).getContent();
+        return UserListDto.builder()
+                .users(accounts.stream().map(AccountInfoResponseDto::fromAccount).collect(Collectors.toList()))
+                .totalPages(accounts.size()/size)
+                .build();
+    }
+
+    @Override
+    public AccountInfoResponseDto addRoleToUser(String token, List<String> rolesId) {
+        Account account = accountRepository.findById(authService.decodeToken(token)).orElse(null);
+        List<Role> roles = roleRepository.findAllById(rolesId);
+        if (account != null) {
+            account.getRoles().addAll(roles);
+            roles.forEach(role -> {
+                role.getAccount().add(account);
+            });
+        }
+        return AccountInfoResponseDto.fromAccount(account);
     }
 }

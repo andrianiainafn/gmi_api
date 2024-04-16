@@ -1,6 +1,8 @@
 package andrianianafn.gmi_api.repository;
 
 import andrianianafn.gmi_api.entity.Account;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
@@ -13,4 +15,6 @@ public interface AccountRepository extends JpaRepository<Account,String> {
     Account findAccountByAccountId(String accountId);
 
     List<Account> findAllByEmailContainingOrFirstnameContainingOrLastnameContaining(String email, String firstname, String lastname);
+
+    Page<Account> findAllByAccountIdIsNot(String accountId, Pageable pageable);
 }
