@@ -21,4 +21,6 @@ public interface RequestRepository extends JpaRepository<Request,String> {
     Page<Request> findAllByOrderByCreatedAtDesc(Pageable pageable);
 
     Page<Request> findAllByActualPriorityOrderByCreatedAtDesc(String priorityDesignation,Pageable pageable);
+
+    Page<Request> findAllByAccount_AccountId(String account_accountId, Pageable pageable);
 }

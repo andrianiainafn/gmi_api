@@ -23,7 +23,6 @@ public class HistoryController {
 
     @PostMapping
     private ResponseEntity<HistoryResponseDto> creatNewMovement(@RequestBody HistoryRequestDto historyRequestDto, @RequestHeader (name = HttpHeaders.AUTHORIZATION) String authorizationHeader){
-        System.out.println("fa tonga to ve alony ee");
         if (StringUtils.hasText(authorizationHeader) && authorizationHeader.startsWith("Bearer ")) {
             String token = authorizationHeader.substring(7);
             return new ResponseEntity<>(historyService.createNewMovement(historyRequestDto,token),HttpStatus.CREATED);

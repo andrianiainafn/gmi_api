@@ -3,6 +3,7 @@ package andrianianafn.gmi_api.controller;
 import andrianianafn.gmi_api.dto.request.AccountRequestDto;
 import andrianianafn.gmi_api.dto.request.AddRoleRequestDto;
 import andrianianafn.gmi_api.dto.response.AccountInfoResponseDto;
+import andrianianafn.gmi_api.dto.response.ProfileResponseDto;
 import andrianianafn.gmi_api.dto.response.UserListDto;
 import andrianianafn.gmi_api.service.AccountService;
 import org.springframework.http.HttpHeaders;
@@ -55,6 +56,15 @@ public class AccountController {
         if (StringUtils.hasText(authorizationHeader) && authorizationHeader.startsWith("Bearer ")) {
             String token = authorizationHeader.substring(7);
             return new ResponseEntity<>(accountService.addRoleToUser(token,addRoleRequestDto.getRolesId()),HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    @GetMapping("/profile")
+    public ResponseEntity<ProfileResponseDto> getProfileInfo(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size,@RequestHeader (name = HttpHeaders.AUTHORIZATION) String authorizationHeader){
+        if (StringUtils.hasText(authorizationHeader) && authorizationHeader.startsWith("Bearer ")) {
+            String token = authorizationHeader.substring(7);
+            return new ResponseEntity<>(accountService.getProfile(token,size,page),HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }

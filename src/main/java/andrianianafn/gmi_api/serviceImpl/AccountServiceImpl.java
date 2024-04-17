@@ -2,19 +2,20 @@ package andrianianafn.gmi_api.serviceImpl;
 
 import andrianianafn.gmi_api.dto.request.AccountRequestDto;
 import andrianianafn.gmi_api.dto.response.AccountInfoResponseDto;
+import andrianianafn.gmi_api.dto.response.ProfileResponseDto;
 import andrianianafn.gmi_api.dto.response.UserListDto;
 import andrianianafn.gmi_api.entity.Account;
 import andrianianafn.gmi_api.entity.Department;
+import andrianianafn.gmi_api.entity.Request;
 import andrianianafn.gmi_api.entity.Role;
 import andrianianafn.gmi_api.repository.AccountRepository;
 import andrianianafn.gmi_api.repository.DepartmentRepository;
+import andrianianafn.gmi_api.repository.RequestRepository;
 import andrianianafn.gmi_api.repository.RoleRepository;
 import andrianianafn.gmi_api.service.AccountService;
 import andrianianafn.gmi_api.service.AuthService;
 import jakarta.transaction.Transactional;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -26,13 +27,15 @@ import java.util.stream.Collectors;
 @Transactional
 public class AccountServiceImpl implements AccountService {
     private final AccountRepository accountRepository;
+    private final RequestRepository requestRepository;
     private final DepartmentRepository departmentRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthService authService;
 
-    public AccountServiceImpl(AccountRepository accountRepository, DepartmentRepository departmentRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, AuthService authService) {
+    public AccountServiceImpl(AccountRepository accountRepository, RequestRepository requestRepository, DepartmentRepository departmentRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, AuthService authService) {
         this.accountRepository = accountRepository;
+        this.requestRepository = requestRepository;
         this.departmentRepository = departmentRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
@@ -100,5 +103,17 @@ public class AccountServiceImpl implements AccountService {
             });
         }
         return AccountInfoResponseDto.fromAccount(account);
+    }
+
+    @Override
+    public ProfileResponseDto getProfile(String token,int size,int page) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        String accountId = authService.decodeToken(token);
+        Account account = accountRepository.findById(accountId).orElse(null);
+        List<Request> requests = requestRepository.findAllByAccount_AccountId(accountId,pageRequest).getContent();
+        return ProfileResponseDto.builder()
+                .account(AccountInfoResponseDto.fromAccount(account))
+                .requests(requests)
+                .build();
     }
 }
