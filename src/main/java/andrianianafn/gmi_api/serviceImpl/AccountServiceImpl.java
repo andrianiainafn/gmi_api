@@ -19,6 +19,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -63,7 +65,15 @@ public class AccountServiceImpl implements AccountService {
         roles.forEach(role -> {
             role.getAccount().add(accountSaved);
         });
-
+        if(department != null){
+            if (!department.getAccounts().isEmpty()){
+                department.getAccounts().add(account);
+            }else {
+                List<Account> newList = new ArrayList<>();
+                newList.add(account);
+                department.setAccounts(newList);
+            }
+        }
          return AccountInfoResponseDto.fromAccount(accountSaved);
     }
 
