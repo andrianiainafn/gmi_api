@@ -22,6 +22,7 @@ public class Department {
     private String departmentId;
     private String departmentName;
 
+    @JsonIgnore
     @OneToMany
     @Cascade(CascadeType.ALL)
     private List<Account> accounts;

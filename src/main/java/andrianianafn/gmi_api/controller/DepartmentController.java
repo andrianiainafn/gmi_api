@@ -1,13 +1,10 @@
 package andrianianafn.gmi_api.controller;
 
-import andrianianafn.gmi_api.entity.Department;
+import andrianianafn.gmi_api.dto.response.DepartmentResponseDto;
 import andrianianafn.gmi_api.service.DepartmentService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -23,7 +20,11 @@ public class DepartmentController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Department>> getDepartments(){
+    public ResponseEntity<List<DepartmentResponseDto>> getDepartments(){
         return new ResponseEntity<>(departmentService.getDepartments(), HttpStatus.OK);
+    }
+    @PutMapping("/{departmentId}")
+    public ResponseEntity<DepartmentResponseDto> addAccountToDepartment(@PathVariable String departmentId, @RequestBody List<String> userId){
+        return new ResponseEntity<>(departmentService.addAccountToDepartment(departmentId, userId),HttpStatus.OK);
     }
 }
