@@ -5,12 +5,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Builder
 public class NotificationRequestDto {
-    private String lastDepartmentId;
-    private String newDepartmentId;
+    private List<String> accountConcerned;
     private String notificationType;
 }
