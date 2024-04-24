@@ -18,9 +18,14 @@ public interface RequestRepository extends JpaRepository<Request,String> {
             + " FROM Request r")
     RequestStatDto getRequestStat();
 
+    Page<Request> findAllByAccount_Department_Organization_OrganizationIdOrderByCreatedAtDesc(String account_department_organization_organizationId, Pageable pageable);
     Page<Request> findAllByOrderByCreatedAtDesc(Pageable pageable);
 
     Page<Request> findAllByActualPriorityOrderByCreatedAtDesc(String priorityDesignation,Pageable pageable);
 
+    Page<Request> findAllByAccount_Department_Organization_OrganizationIdAndActualPriorityOrderByCreatedAtDesc(String account_department_organization_organizationId, String actualPriority, Pageable pageable);
+
+
     Page<Request> findAllByAccount_AccountId(String account_accountId, Pageable pageable);
+
 }

@@ -31,8 +31,12 @@ public class RequestController {
     }
 
     @GetMapping("")
-    public ResponseEntity<List<RequestResponseDto>> getRequestList(@RequestParam("priority") String priority, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size){
-        return new ResponseEntity<>(requestService.getRequestList(priority, page, size),HttpStatus.OK);
+    public ResponseEntity<List<RequestResponseDto>> getRequestList(@RequestHeader (name = HttpHeaders.AUTHORIZATION) String authorizationHeader,@RequestParam("priority") String priority, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size){
+        if (StringUtils.hasText(authorizationHeader) && authorizationHeader.startsWith("Bearer ")) {
+            String token = authorizationHeader.substring(7);
+            return new ResponseEntity<>(requestService.getRequestList(token,priority, page, size),HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     @PostMapping("")

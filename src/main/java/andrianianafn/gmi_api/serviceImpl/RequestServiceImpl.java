@@ -4,10 +4,12 @@ import andrianianafn.gmi_api.dto.request.RequestRequestDto;
 import andrianianafn.gmi_api.dto.response.RequestResponseDto;
 import andrianianafn.gmi_api.dto.response.RequestStatDto;
 import andrianianafn.gmi_api.entity.Account;
+import andrianianafn.gmi_api.entity.Organization;
 import andrianianafn.gmi_api.entity.Request;
 import andrianianafn.gmi_api.entity.RequestPriority;
 import andrianianafn.gmi_api.enums.RequestStatus;
 import andrianianafn.gmi_api.repository.AccountRepository;
+import andrianianafn.gmi_api.repository.OrganizationRepository;
 import andrianianafn.gmi_api.repository.PriorityRepository;
 import andrianianafn.gmi_api.repository.RequestRepository;
 import andrianianafn.gmi_api.service.AuthService;
@@ -28,12 +30,14 @@ public class RequestServiceImpl implements RequestService {
     private final PriorityRepository priorityRepository;
     private final AuthService authService;
     private final AccountRepository accountRepository;
+    private final OrganizationRepository organizationRepository;
 
-    public RequestServiceImpl(RequestRepository requestRepository, PriorityRepository priorityRepository, AuthService authService, AccountRepository accountRepository) {
+    public RequestServiceImpl(RequestRepository requestRepository, PriorityRepository priorityRepository, AuthService authService, AccountRepository accountRepository, OrganizationRepository organizationRepository) {
         this.requestRepository = requestRepository;
         this.priorityRepository = priorityRepository;
         this.authService = authService;
         this.accountRepository = accountRepository;
+        this.organizationRepository = organizationRepository;
     }
 
     @Override
@@ -42,13 +46,14 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public List<RequestResponseDto> getRequestList(String priority, int page, int size) {
+    public List<RequestResponseDto> getRequestList(String token,String priority, int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
         Page<Request> requestPage = null;
+        Organization organization = organizationRepository.findAllByOrganizationOwner_AccountId(authService.decodeToken(token)).get(0);
         if(priority.equals("All")){
-            requestPage = requestRepository.findAllByOrderByCreatedAtDesc(pageRequest);
+            requestPage = requestRepository.findAllByAccount_Department_Organization_OrganizationIdOrderByCreatedAtDesc(organization.getOrganizationId(),pageRequest);
         }else {
-            requestPage = requestRepository.findAllByActualPriorityOrderByCreatedAtDesc(priority,pageRequest);
+            requestPage = requestRepository.findAllByAccount_Department_Organization_OrganizationIdAndActualPriorityOrderByCreatedAtDesc(organization.getOrganizationId(),priority,pageRequest);
         }
         return requestPage.getContent().stream().map(RequestResponseDto::fromRequest).collect(Collectors.toList());
     }

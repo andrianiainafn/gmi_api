@@ -11,7 +11,7 @@ import java.util.List;
 public interface RequestService {
     RequestStatDto getRequestStat();
 
-    List<RequestResponseDto> getRequestList(String priority, int page, int size);
+    List<RequestResponseDto> getRequestList(String token,String priority, int page, int size);
 
     Request createNewRequest(RequestRequestDto requestRequestDto,String token);
 
