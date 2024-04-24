@@ -6,17 +6,15 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Builder
 public class DepartmentResponseDto {
-    private List<AccountDepartmentDto> account;
+    private List<AccountDepartmentDto> accounts;
     private String departmentId;
     private String departmentName;
     private Date createdAt;
@@ -30,7 +28,7 @@ public class DepartmentResponseDto {
                 .updatedAt(department.getUpdatedAt())
                 .build();
        List<AccountDepartmentDto> accountDepartmentDto = department.getAccounts().stream().map(AccountDepartmentDto::fromAccount).toList();
-       departmentResponseDto.setAccount(accountDepartmentDto);
+       departmentResponseDto.setAccounts(accountDepartmentDto);
         return departmentResponseDto;
     }
 }

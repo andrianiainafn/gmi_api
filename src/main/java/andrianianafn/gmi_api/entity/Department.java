@@ -27,6 +27,10 @@ public class Department {
     @Cascade(CascadeType.ALL)
     private List<Account> accounts;
 
+    @JsonIgnore
+    @ManyToOne
+    private Organization organization;
+
 //    @OneToMany(mappedBy = "newDepartment")
 //    @JsonIgnore
 //    @Cascade(CascadeType.ALL)

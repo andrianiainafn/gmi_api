@@ -1,14 +1,20 @@
 package andrianianafn.gmi_api.serviceImpl;
 
+import andrianianafn.gmi_api.dto.request.DepartmentRequestDto;
 import andrianianafn.gmi_api.dto.response.DepartmentResponseDto;
 import andrianianafn.gmi_api.entity.Account;
 import andrianianafn.gmi_api.entity.Department;
+import andrianianafn.gmi_api.entity.Organization;
 import andrianianafn.gmi_api.repository.AccountRepository;
 import andrianianafn.gmi_api.repository.DepartmentRepository;
+import andrianianafn.gmi_api.repository.OrganizationRepository;
+import andrianianafn.gmi_api.service.AuthService;
 import andrianianafn.gmi_api.service.DepartmentService;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -17,15 +23,21 @@ import java.util.List;
 public class DepartmentServiceImpl implements DepartmentService {
     private final DepartmentRepository departmentRepository;
     private final AccountRepository accountRepository;
+    private final OrganizationRepository organizationRepository;
+    private final AuthService authService;
 
-    public DepartmentServiceImpl(DepartmentRepository departmentRepository, AccountRepository accountRepository) {
+    public DepartmentServiceImpl(DepartmentRepository departmentRepository, AccountRepository accountRepository, OrganizationRepository organizationRepository, AuthService authService) {
         this.departmentRepository = departmentRepository;
         this.accountRepository = accountRepository;
+        this.organizationRepository = organizationRepository;
+        this.authService = authService;
     }
 
     @Override
-    public List<DepartmentResponseDto> getDepartments() {
-        List<Department> departments =  departmentRepository.findAll();
+    public List<DepartmentResponseDto> getDepartments(String token,int page ,int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Organization organization = organizationRepository.findAllByOrganizationOwner_AccountId(authService.decodeToken(token)).get(0);
+        List<Department> departments =  departmentRepository.findAllByOrganization_OrganizationId(organization.getOrganizationId(), pageRequest).getContent();
         return departments.stream().map(DepartmentResponseDto::fromDepartment).toList();
     }
 
@@ -41,5 +53,23 @@ public class DepartmentServiceImpl implements DepartmentService {
             return DepartmentResponseDto.fromDepartment(department);
         }
         return null;
+    }
+
+    @Override
+    public DepartmentResponseDto createDepartment(String token, DepartmentRequestDto departmentRequestDto) {
+        Organization organization = organizationRepository.findAllByOrganizationOwner_AccountId(authService.decodeToken(token)).get(0);
+        List<Account> accounts = accountRepository.findAllById(departmentRequestDto.getUserId());
+        Department department = Department.builder()
+                .departmentName(departmentRequestDto.getDepartmentName())
+                .createdAt(new Date())
+                .updatedAt(new Date())
+                .organization(organization)
+                .build();
+        Department departmentSaved = departmentRepository.save(department);
+        departmentSaved.setAccounts(accounts);
+        accounts.forEach(account -> {
+            account.setDepartment(departmentSaved);
+        });
+        return DepartmentResponseDto.fromDepartment(departmentSaved);
     }
 }
