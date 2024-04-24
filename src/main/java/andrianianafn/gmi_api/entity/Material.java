@@ -28,6 +28,9 @@ public class Material {
     private String actualStatus;
     private State state;
 
+    @ManyToOne
+    private Account owner;
+
     @ManyToMany
     private List<Account> accounts;
     @ManyToOne

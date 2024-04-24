@@ -6,9 +6,12 @@ import andrianianafn.gmi_api.dto.response.MaterialStatResponseDto;
 import andrianianafn.gmi_api.entity.Account;
 import andrianianafn.gmi_api.entity.Material;
 import andrianianafn.gmi_api.entity.MaterialStatus;
+import andrianianafn.gmi_api.entity.Organization;
 import andrianianafn.gmi_api.repository.AccountRepository;
 import andrianianafn.gmi_api.repository.MaterialRepository;
 import andrianianafn.gmi_api.repository.MaterialStatusRepository;
+import andrianianafn.gmi_api.repository.OrganizationRepository;
+import andrianianafn.gmi_api.service.AuthService;
 import andrianianafn.gmi_api.service.MaterialService;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
@@ -25,15 +28,20 @@ public class MaterialServiceImpl implements MaterialService {
     private final MaterialStatusRepository materialStatusRepository;
 
     private final AccountRepository accountRepository;
+    private final AuthService authService;
+    private final OrganizationRepository organizationRepository;
 
-    public MaterialServiceImpl(MaterialRepository materialRepository, MaterialStatusRepository materialStatusRepository, AccountRepository accountRepository) {
+    public MaterialServiceImpl(MaterialRepository materialRepository, MaterialStatusRepository materialStatusRepository, AccountRepository accountRepository, AuthService authService, OrganizationRepository organizationRepository) {
         this.materialRepository = materialRepository;
         this.materialStatusRepository = materialStatusRepository;
         this.accountRepository = accountRepository;
+        this.authService = authService;
+        this.organizationRepository = organizationRepository;
     }
 
     @Override
-    public Material createNewMaterial(MaterialRequestDto materialRequestDto) {
+    public Material createNewMaterial(String token,MaterialRequestDto materialRequestDto) {
+        Account owner = accountRepository.findById(authService.decodeToken(token)).orElse(null);
         MaterialStatus materialStatus = materialStatusRepository.getReferenceById(materialRequestDto.getStatusId());
         Material material = Material.builder()
                 .materialName(materialRequestDto.getMaterialName())
@@ -42,10 +50,14 @@ public class MaterialServiceImpl implements MaterialService {
                 .state(materialRequestDto.getState())
                 .createdAt(new Date())
                 .updatedAt(new Date())
+                .owner(owner)
                 .actualStatus(materialStatus.getMaterialStatusName())
                 .materialStatus(materialStatus)
                 .build();
         Material materialSaved = materialRepository.save(material);
+        if (owner!=null){
+            owner.getMaterials().add(materialSaved);
+        }
         return  Material.builder()
                 .materialId(materialSaved.getMaterialId())
                 .materialName(materialSaved.getMaterialName())
@@ -59,13 +71,14 @@ public class MaterialServiceImpl implements MaterialService {
     }
 
     @Override
-    public List<Material> getMaterialList(String status,int page,int size) {
+    public List<Material> getMaterialList(String token,String status,int page,int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
         Page<Material> materialPage = null;
+        Organization organization = organizationRepository.findAllByOrganizationOwner_AccountId(authService.decodeToken(token)).get(0);
         if(status.equals("All")){
-            materialPage = materialRepository.findAllByOrderByCreatedAt(pageRequest);
+            materialPage = materialRepository.findAllByOwner_Department_Organization_OrganizationIdOrderByCreatedAtDesc(organization.getOrganizationId(), pageRequest);
         }else{
-             materialPage = materialRepository.findByActualStatusOrderByCreatedAt(status,pageRequest);
+             materialPage = materialRepository.findAllByOwner_Department_Organization_OrganizationIdAndActualStatusOrderByCreatedAtDesc(organization.getOrganizationId(),status,pageRequest);
         }
         return materialPage.getContent();
     }
@@ -100,5 +113,21 @@ public class MaterialServiceImpl implements MaterialService {
     @Override
     public Long getTotalPage() {
         return materialRepository.count();
+    }
+
+    @Override
+    public List<Material> addOwnerForMaterials(String token, int page, int size) {
+        List<Material> materials = materialRepository.findAll();
+        Account owner = accountRepository.findById(authService.decodeToken(token)).orElse(null);
+        materials.forEach(material -> {
+            material.setOwner(owner);
+            if(owner != null){
+                owner.getMaterialsCreated().add(material);
+            }
+            materialRepository.save(material);
+        });
+        assert owner != null;
+        accountRepository.save(owner);
+        return materials;
     }
 }

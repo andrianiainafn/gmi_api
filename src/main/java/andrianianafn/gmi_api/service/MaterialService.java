@@ -8,13 +8,15 @@ import andrianianafn.gmi_api.entity.Material;
 import java.util.List;
 
 public interface MaterialService {
-    Material createNewMaterial(MaterialRequestDto materialRequestDto);
+    Material createNewMaterial(String token,MaterialRequestDto materialRequestDto);
 
-    List<Material> getMaterialList(String status,int page,int size);
+    List<Material> getMaterialList(String token,String status,int page,int size);
 
     MaterialStatResponseDto getMaterialStat();
 
     Material editMaterial(EditMaterialRequestDto editMaterialRequestDto,String materialId);
 
     Long getTotalPage();
+
+    List<Material> addOwnerForMaterials(String token, int page, int size);
 }
