@@ -17,4 +17,6 @@ public interface AccountRepository extends JpaRepository<Account,String> {
     List<Account> findAllByEmailContainingOrFirstnameContainingOrLastnameContaining(String email, String firstname, String lastname);
 
     Page<Account> findAllByAccountIdIsNot(String accountId, Pageable pageable);
+
+    Page<Account> findAllByDepartment_Organization_OrganizationIdAndAccountIdIsNot(String department_organization_organizationId, String accountId, Pageable pageable);
 }

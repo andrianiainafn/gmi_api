@@ -27,6 +27,7 @@ public class Account {
     private String password;
     private String providerType;
 
+
     @JsonIgnore
     @ManyToMany
     @Cascade(CascadeType.ALL)
@@ -34,6 +35,14 @@ public class Account {
     @ManyToMany
     @Cascade (CascadeType.ALL)
     private List<Role> roles;
+
+    @JsonIgnore
+    @OneToMany
+    @Cascade (CascadeType.ALL)
+    private List<Material> materialsCreated;
+    @JsonIgnore
+    @OneToMany
+    private List<Organization> organizations;
 
     @ManyToMany
     @Cascade (CascadeType.ALL)
