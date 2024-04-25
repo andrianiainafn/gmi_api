@@ -2,12 +2,12 @@ package andrianianafn.gmi_api.serviceImpl;
 
 import andrianianafn.gmi_api.entity.Account;
 import andrianianafn.gmi_api.entity.Notification;
+import andrianianafn.gmi_api.entity.Organization;
 import andrianianafn.gmi_api.repository.AccountRepository;
 import andrianianafn.gmi_api.repository.NotificationRepository;
 import andrianianafn.gmi_api.service.AuthService;
 import andrianianafn.gmi_api.service.NotificationService;
 import jakarta.transaction.Transactional;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -45,16 +45,21 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     public List<Notification> getMovementNewNotification(String token) {
-        return null;
-    }
-
-    @Override
-    public List<Notification> getRequestNotification(String token) {
         String accountId = authService.decodeToken(token);
         Account account = accountRepository.findById(accountId).orElse(null);
         List<Account> accounts = new ArrayList<>();
         accounts.add(account);
         return notificationRepository.findAllByAccount_AccountIdOrConcernedAccountsAndNotificationTypeEquals(accountId,accounts,"request");
+    }
+
+    @Override
+    public List<Notification> getRequestNotification(String token) {
+        Account account = accountRepository.findById(authService.decodeToken(token)).orElse(null);
+        if(account != null){
+            Organization organization = account.getDepartment().getOrganization();
+            return notificationRepository.findAllByAccount_Department_Organization_OrganizationIdAndNotificationTypeEquals(organization.getOrganizationId(), "request");
+        }
+        return new ArrayList<>();
     }
 
     @Override

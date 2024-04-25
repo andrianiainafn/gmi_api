@@ -14,6 +14,8 @@ public class CorsConfig {
         corsConfig.addAllowedOrigin("*");
         corsConfig.addAllowedMethod("*");
         corsConfig.addAllowedHeader("*");
+        corsConfig.addAllowedOriginPattern("*");
+        corsConfig.setAllowCredentials(true);
 
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

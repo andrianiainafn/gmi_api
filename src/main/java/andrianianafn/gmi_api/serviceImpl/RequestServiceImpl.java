@@ -49,11 +49,14 @@ public class RequestServiceImpl implements RequestService {
     public List<RequestResponseDto> getRequestList(String token,String priority, int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
         Page<Request> requestPage = null;
-        Organization organization = organizationRepository.findAllByOrganizationOwner_AccountId(authService.decodeToken(token)).get(0);
-        if(priority.equals("All")){
-            requestPage = requestRepository.findAllByAccount_Department_Organization_OrganizationIdOrderByCreatedAtDesc(organization.getOrganizationId(),pageRequest);
-        }else {
-            requestPage = requestRepository.findAllByAccount_Department_Organization_OrganizationIdAndActualPriorityOrderByCreatedAtDesc(organization.getOrganizationId(),priority,pageRequest);
+        Account account = accountRepository.findById(authService.decodeToken(token)).orElse(null);
+        if(account != null){
+            Organization organization = account.getDepartment().getOrganization();
+            if(priority.equals("All")){
+                requestPage = requestRepository.findAllByAccount_Department_Organization_OrganizationIdOrderByCreatedAtDesc(organization.getOrganizationId(),pageRequest);
+            }else {
+                requestPage = requestRepository.findAllByAccount_Department_Organization_OrganizationIdAndActualPriorityOrderByCreatedAtDesc(organization.getOrganizationId(),priority,pageRequest);
+            }
         }
         return requestPage.getContent().stream().map(RequestResponseDto::fromRequest).collect(Collectors.toList());
     }

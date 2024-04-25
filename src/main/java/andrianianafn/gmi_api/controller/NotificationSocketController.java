@@ -7,8 +7,11 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RestController;
 
 @Controller
+@CrossOrigin(origins = "*")
 public class NotificationSocketController {
 
     private final SimpMessagingTemplate simpMessagingTemplate;
@@ -17,10 +20,10 @@ public class NotificationSocketController {
         this.simpMessagingTemplate = simpMessagingTemplate;
     }
 
-    @MessageMapping("/notification") // /app/notifications
+    @MessageMapping("/broadcast") // /app/notifications
     @SendTo("/notification/public")
-    public Notification receivePublicNotification(@Payload Notification notification){
-        return notification;
+    public String receivePublicNotification(@Payload String message) {
+        return "You have received a message: " + message;
     }
     @MessageMapping("/private-notification")
     public Notification receivePrivateNotification(@Payload Notification notification){

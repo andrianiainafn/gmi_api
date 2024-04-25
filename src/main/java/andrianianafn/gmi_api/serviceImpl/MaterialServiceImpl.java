@@ -74,7 +74,7 @@ public class MaterialServiceImpl implements MaterialService {
     public List<Material> getMaterialList(String token,String status,int page,int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
         Page<Material> materialPage = null;
-        Organization organization = organizationRepository.findAllByOrganizationOwner_AccountId(authService.decodeToken(token)).get(0);
+        Organization organization = organizationRepository.findAllByOrganizationOwner_AccountId(authService.decodeToken(token)).    get(0);
         if(status.equals("All")){
             materialPage = materialRepository.findAllByOwner_Department_Organization_OrganizationIdOrderByCreatedAtDesc(organization.getOrganizationId(), pageRequest);
         }else{
