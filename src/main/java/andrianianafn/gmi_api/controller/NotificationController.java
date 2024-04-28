@@ -55,5 +55,9 @@ public class NotificationController {
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
+    @PutMapping("/{notification-id}")
+    public ResponseEntity<Notification> markNotificationAsRead(@PathVariable ("notification-id") String notificationId){
+        return new ResponseEntity<>(notificationService.markNotificationAsRead(notificationId),HttpStatus.OK);
+    }
 
 }

@@ -8,6 +8,7 @@ import andrianianafn.gmi_api.repository.NotificationRepository;
 import andrianianafn.gmi_api.service.AuthService;
 import andrianianafn.gmi_api.service.NotificationService;
 import jakarta.transaction.Transactional;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -65,5 +66,15 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     public List<Notification> getReportNotification(String token) {
         return null;
+    }
+
+    @Override
+    public Notification markNotificationAsRead(String notificationId) {
+        Notification notification = notificationRepository.findById(notificationId).orElse(null);
+        if (notification != null) {
+            notification.setRead(true);
+            notificationRepository.save(notification);
+        }
+        return notification;
     }
 }

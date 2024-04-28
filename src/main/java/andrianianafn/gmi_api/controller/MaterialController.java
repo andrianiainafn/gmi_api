@@ -64,5 +64,5 @@ public class MaterialController {
             return new ResponseEntity<>(materialService.addOwnerForMaterials(token ,page, size),HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-    }
+    }   
 }

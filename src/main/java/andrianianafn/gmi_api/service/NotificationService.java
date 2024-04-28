@@ -1,6 +1,7 @@
 package andrianianafn.gmi_api.service;
 
 import andrianianafn.gmi_api.entity.Notification;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
@@ -12,4 +13,6 @@ public interface NotificationService {
     List<Notification> getRequestNotification(String token);
 
     List<Notification> getReportNotification(String token);
+
+    Notification markNotificationAsRead(String notificationId);
 }
