@@ -22,8 +22,8 @@ public class NotificationSocketController {
 
     @MessageMapping("/broadcast") // /app/notifications
     @SendTo("/notification/public")
-    public String receivePublicNotification(@Payload String message) {
-        return "You have received a message: " + message;
+    public Notification receivePublicNotification(@Payload Notification notification) {
+        return notification;
     }
     @MessageMapping("/private-notification")
     public Notification receivePrivateNotification(@Payload Notification notification){
