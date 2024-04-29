@@ -93,8 +93,8 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public UserListDto getUserList(int page, int size,String token) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        Organization organization = organizationRepository.findAllByOrganizationOwner_AccountId(authService.decodeToken(token)).get(0);
-        List<Account> accounts = accountRepository.findAllByDepartment_Organization_OrganizationIdAndAccountIdIsNot(organization.getOrganizationId(), authService.decodeToken(token),pageRequest ).getContent();
+        Department department = accountRepository.findById(authService.decodeToken(token)).orElse(null).getDepartment();
+        List<Account> accounts = accountRepository.findAllByDepartment_Organization_OrganizationIdAndAccountIdIsNot(department.getOrganization().getOrganizationId(), authService.decodeToken(token),pageRequest ).getContent();
         return UserListDto.builder()
                 .users(accounts.stream().map(AccountInfoResponseDto::fromAccount).collect(Collectors.toList()))
                 .totalPages(accounts.size()/size)
