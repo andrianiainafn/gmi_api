@@ -3,14 +3,8 @@ package andrianianafn.gmi_api.serviceImpl;
 import andrianianafn.gmi_api.dto.request.EditMaterialRequestDto;
 import andrianianafn.gmi_api.dto.request.MaterialRequestDto;
 import andrianianafn.gmi_api.dto.response.MaterialStatResponseDto;
-import andrianianafn.gmi_api.entity.Account;
-import andrianianafn.gmi_api.entity.Material;
-import andrianianafn.gmi_api.entity.MaterialStatus;
-import andrianianafn.gmi_api.entity.Organization;
-import andrianianafn.gmi_api.repository.AccountRepository;
-import andrianianafn.gmi_api.repository.MaterialRepository;
-import andrianianafn.gmi_api.repository.MaterialStatusRepository;
-import andrianianafn.gmi_api.repository.OrganizationRepository;
+import andrianianafn.gmi_api.entity.*;
+import andrianianafn.gmi_api.repository.*;
 import andrianianafn.gmi_api.service.AuthService;
 import andrianianafn.gmi_api.service.MaterialService;
 import jakarta.transaction.Transactional;
@@ -18,8 +12,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -28,13 +24,15 @@ public class MaterialServiceImpl implements MaterialService {
     private final MaterialStatusRepository materialStatusRepository;
 
     private final AccountRepository accountRepository;
+    private final DepartmentRepository departmentRepository;
     private final AuthService authService;
     private final OrganizationRepository organizationRepository;
 
-    public MaterialServiceImpl(MaterialRepository materialRepository, MaterialStatusRepository materialStatusRepository, AccountRepository accountRepository, AuthService authService, OrganizationRepository organizationRepository) {
+    public MaterialServiceImpl(MaterialRepository materialRepository, MaterialStatusRepository materialStatusRepository, AccountRepository accountRepository, DepartmentRepository departmentRepository, AuthService authService, OrganizationRepository organizationRepository) {
         this.materialRepository = materialRepository;
         this.materialStatusRepository = materialStatusRepository;
         this.accountRepository = accountRepository;
+        this.departmentRepository = departmentRepository;
         this.authService = authService;
         this.organizationRepository = organizationRepository;
     }
@@ -51,6 +49,7 @@ public class MaterialServiceImpl implements MaterialService {
                 .createdAt(new Date())
                 .updatedAt(new Date())
                 .owner(owner)
+                .accounts(new ArrayList<>())
                 .actualStatus(materialStatus.getMaterialStatusName())
                 .materialStatus(materialStatus)
                 .build();
@@ -74,7 +73,9 @@ public class MaterialServiceImpl implements MaterialService {
     public List<Material> getMaterialList(String token,String status,int page,int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
         Page<Material> materialPage = null;
-        Organization organization = organizationRepository.findAllByOrganizationOwner_AccountId(authService.decodeToken(token)).    get(0);
+        Account account = accountRepository.findById(authService.decodeToken(token)).orElse(null);
+        Department department =account.getDepartment();
+        Organization organization = organizationRepository.findById(department.getOrganization().getOrganizationId()).orElse(null);
         if(status.equals("All")){
             materialPage = materialRepository.findAllByOwner_Department_Organization_OrganizationIdOrderByCreatedAtDesc(organization.getOrganizationId(), pageRequest);
         }else{
@@ -129,5 +130,20 @@ public class MaterialServiceImpl implements MaterialService {
         assert owner != null;
         accountRepository.save(owner);
         return materials;
+    }
+
+    @Override
+    public String deleteMaterial(String materialId) {
+        Material material = materialRepository.findById(materialId).orElse(null);
+        if(material != null){
+            Account account = accountRepository.findById(material.getOwner().getAccountId()).orElse(null);
+            account.getMaterials().remove(material);
+            material.setAccounts(new ArrayList<>());
+            material.setMaterialStatus(null);
+            material.setOwner(null);
+            material.setHistories(new ArrayList<>());
+        }
+        materialRepository.deleteById(materialId);
+        return "Material deleted successfully";
     }
 }
