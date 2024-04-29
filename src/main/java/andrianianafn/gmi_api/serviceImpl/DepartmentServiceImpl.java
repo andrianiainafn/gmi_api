@@ -14,6 +14,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -36,8 +37,11 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     public List<DepartmentResponseDto> getDepartments(String token,int page ,int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        Organization organization = organizationRepository.findAllByOrganizationOwner_AccountId(authService.decodeToken(token)).get(0);
-        List<Department> departments =  departmentRepository.findAllByOrganization_OrganizationId(organization.getOrganizationId(), pageRequest).getContent();
+        Account account = accountRepository.findById(authService.decodeToken(token)).orElse(null);
+        if (account.getDepartment() == null){
+            return  new ArrayList<>();
+        }
+        List<Department> departments =  departmentRepository.findAllByOrganization_OrganizationId(account.getDepartment().getOrganization().getOrganizationId(), pageRequest).getContent();
         return departments.stream().map(DepartmentResponseDto::fromDepartment).toList();
     }
 
