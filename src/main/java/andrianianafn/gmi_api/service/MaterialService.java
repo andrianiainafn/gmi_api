@@ -19,4 +19,6 @@ public interface MaterialService {
     Long getTotalPage();
 
     List<Material> addOwnerForMaterials(String token, int page, int size);
+
+    String deleteMaterial(String materialId);
 }

@@ -64,5 +64,11 @@ public class MaterialController {
             return new ResponseEntity<>(materialService.addOwnerForMaterials(token ,page, size),HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-    }   
+    }
+
+    @DeleteMapping("/{material-id}")
+    public ResponseEntity<String> deleteMaterial(@PathVariable ("material-id") String materialId){
+
+        return new ResponseEntity<>(materialService.deleteMaterial(materialId),HttpStatus.OK);
+    }
 }
