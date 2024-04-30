@@ -1,6 +1,7 @@
 package andrianianafn.gmi_api.serviceImpl;
 
 import andrianianafn.gmi_api.dto.request.AccountRequestDto;
+import andrianianafn.gmi_api.dto.request.EditProfileDto;
 import andrianianafn.gmi_api.dto.response.AccountInfoResponseDto;
 import andrianianafn.gmi_api.dto.response.ProfileResponseDto;
 import andrianianafn.gmi_api.dto.response.UserListDto;
@@ -12,7 +13,15 @@ import jakarta.transaction.Transactional;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -124,5 +133,51 @@ public class AccountServiceImpl implements AccountService {
                 .account(AccountInfoResponseDto.fromAccount(account))
                 .requests(requests)
                 .build();
+    }
+
+    @Override
+    public AccountInfoResponseDto editAccountInfo(String userId, AccountRequestDto accountRequestDto) {
+        Account account = accountRepository.findById(userId).orElse(null);
+        Department department = departmentRepository.findById(accountRequestDto.getDepartmentId()).orElse(null);
+        List<Role> roles = roleRepository.findAllById(accountRequestDto.getRolesId());;
+        if(account!=null){
+            account.setRoles(roles);
+            account.setDepartment(department);
+            account.setEmail(accountRequestDto.getEmail());
+            account.setLastname(accountRequestDto.getLastname());
+            account.setFirstname(accountRequestDto.getFirstname());
+            accountRepository.save(account);
+        }
+
+        return AccountInfoResponseDto.fromAccount(account);
+
+
+    }
+
+    @Override
+    public AccountInfoResponseDto editProfile(String token, EditProfileDto editProfileDto) throws IOException {
+        MultipartFile file = editProfileDto.getFile();
+        String fileName = file.getOriginalFilename();
+        String uploadPath = "uploads/" + fileName;
+        Path path = Paths.get("uploads/");
+        if (!Files.exists(path)) {
+            Files.createDirectories(path);
+        }
+        try (InputStream inputStream = file.getInputStream();
+             OutputStream outputStream = new FileOutputStream(uploadPath)) {
+            int read;
+            byte[] bytes = new byte[1024];
+            while ((read = inputStream.read(bytes)) != -1) {
+                outputStream.write(bytes, 0, read);
+            }
+        }
+        Account account = accountRepository.findById(authService.decodeToken(token)).orElse(null);
+        if(account != null) {
+            account.setFirstname(editProfileDto.getFirstname());
+            account.setLastname(editProfileDto.getLastname());
+            account.setEmail(editProfileDto.getEmail());
+            account.setProfileUrl(uploadPath);
+        }
+        return AccountInfoResponseDto.fromAccount(account);
     }
 }

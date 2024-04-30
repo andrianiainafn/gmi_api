@@ -2,6 +2,7 @@ package andrianianafn.gmi_api.controller;
 
 import andrianianafn.gmi_api.dto.request.AccountRequestDto;
 import andrianianafn.gmi_api.dto.request.AddRoleRequestDto;
+import andrianianafn.gmi_api.dto.request.EditProfileDto;
 import andrianianafn.gmi_api.dto.response.AccountInfoResponseDto;
 import andrianianafn.gmi_api.dto.response.ProfileResponseDto;
 import andrianianafn.gmi_api.dto.response.UserListDto;
@@ -11,7 +12,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -67,5 +70,29 @@ public class AccountController {
             return new ResponseEntity<>(accountService.getProfile(token,size,page),HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+    @PutMapping("/{user-id}")
+    public ResponseEntity<AccountInfoResponseDto> editAccountInfo (@PathVariable ("user-id") String userId,@RequestBody AccountRequestDto accountRequestDto){
+        return new ResponseEntity<>(accountService.editAccountInfo(userId,accountRequestDto),HttpStatus.OK);
+    }
+
+    @PutMapping("/profile")
+    public ResponseEntity <AccountInfoResponseDto> editProfileInfo(
+            @RequestParam("file") MultipartFile file,
+            @RequestParam("firstname") String firstname,
+            @RequestParam("lastname") String lastname,
+            @RequestParam("email") String email,
+            @RequestHeader (name = HttpHeaders.AUTHORIZATION) String authorizationHeader) throws IOException {
+          EditProfileDto editProfileDto = EditProfileDto.builder()
+                  .firstname(firstname)
+                  .email(email)
+                  .file(file)
+                  .lastname(lastname)
+                  .build();
+        if (StringUtils.hasText(authorizationHeader) && authorizationHeader.startsWith("Bearer ")) {
+            String token = authorizationHeader.substring(7);
+            return new ResponseEntity<>(accountService.editProfile(token,editProfileDto),HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
 }
