@@ -159,7 +159,7 @@ public class AccountServiceImpl implements AccountService {
         MultipartFile file = editProfileDto.getFile();
         String fileName = file.getOriginalFilename();
         String uploadPath = "uploads/" + fileName;
-        Path path = Paths.get("uploads/");
+        Path path = Paths.get("src/main/resources/static/uploads/");
         if (!Files.exists(path)) {
             Files.createDirectories(path);
         }

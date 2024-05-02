@@ -21,6 +21,7 @@ public class AccountInfoResponseDto {
     private String lastname;
     private String email;
     private String profileUrl;
+    private String providerType;
     private Date createdAt;
     private List<Role> roles;
     private Department department;
@@ -29,6 +30,7 @@ public class AccountInfoResponseDto {
         return AccountInfoResponseDto.builder()
                 .accountId(account.getAccountId())
                 .email(account.getEmail())
+                .providerType(account.getProviderType())
                 .lastname(account.getLastname())
                 .profileUrl(account.getProfileUrl())
                 .firstname(account.getFirstname())
