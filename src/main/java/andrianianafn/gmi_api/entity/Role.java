@@ -23,7 +23,9 @@ public class Role {
     @JsonIgnore
     @ManyToMany
     private List<Account> account;
-
+    @JsonIgnore
+    @ManyToOne
+    private Organization organization;
     private Date createdAt;
     private Date updatedAt;
 }

@@ -8,6 +8,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -16,6 +18,7 @@ public class OrganizationResponseDto {
     private String organizationId;
     private String organizationName;
     private String organizationLogo;
+    private Date createdAt;
     private AccountInfoResponseDto accountOwner;
 
     public static OrganizationResponseDto fromOrganization(Organization organization){
@@ -23,6 +26,7 @@ public class OrganizationResponseDto {
                 .accountOwner(AccountInfoResponseDto.fromAccount(organization.getOrganizationOwner()))
                 .organizationId(organization.getOrganizationId())
                 .organizationLogo(organization.getOrganizationLogo())
+                .createdAt(organization.getCreatedAt())
                 .organizationName(organization.getOrganizationName())
                 .build();
     }

@@ -1,6 +1,7 @@
 package andrianianafn.gmi_api.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,8 +25,8 @@ public class Organization {
 
     @ManyToOne
     private Account organizationOwner;
-
-
+    @OneToMany
+    private List<Role> roles;
     @OneToMany
     private List<Department> departments;
 

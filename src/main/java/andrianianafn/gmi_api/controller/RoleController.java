@@ -4,10 +4,7 @@ import andrianianafn.gmi_api.entity.Role;
 import andrianianafn.gmi_api.service.RoleService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -24,5 +21,20 @@ public class RoleController {
     @GetMapping("")
     public ResponseEntity<List<Role>> geRoleList(){
         return new ResponseEntity<>(roleService.getRoleList(), HttpStatus.OK);
+    }
+    @GetMapping("/{organization-id}")
+    public ResponseEntity<List<Role>> getRoleOfOrganization(@PathVariable ("organization-id") String organizationId){
+        return  new ResponseEntity<>(roleService.getRoleOfOrganization(organizationId), HttpStatus.OK);
+    }
+
+    @PostMapping("/{organization-id}")
+    public ResponseEntity<Role> createNewRole(@PathVariable ("organization-id") String organizationId,@RequestBody String roleName) {
+        return new ResponseEntity<>(roleService.createRole(organizationId,roleName),HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{organization-id}")
+    public ResponseEntity<String> addRoleToOrganization(@PathVariable ("organization-id") String organizationId){
+        roleService.addRoleToOrganization(organizationId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
