@@ -1,5 +1,6 @@
 package andrianianafn.gmi_api.controller;
 
+import andrianianafn.gmi_api.dto.request.RoleRequestDto;
 import andrianianafn.gmi_api.entity.Role;
 import andrianianafn.gmi_api.service.RoleService;
 import org.springframework.http.HttpStatus;
@@ -28,8 +29,8 @@ public class RoleController {
     }
 
     @PostMapping("/{organization-id}")
-    public ResponseEntity<Role> createNewRole(@PathVariable ("organization-id") String organizationId,@RequestBody String roleName) {
-        return new ResponseEntity<>(roleService.createRole(organizationId,roleName),HttpStatus.CREATED);
+    public ResponseEntity<Role> createNewRole(@PathVariable ("organization-id") String organizationId,@RequestBody RoleRequestDto roleRequestDto) {
+        return new ResponseEntity<>(roleService.createRole(organizationId, roleRequestDto.getRoleName()),HttpStatus.CREATED);
     }
 
     @PutMapping("/{organization-id}")

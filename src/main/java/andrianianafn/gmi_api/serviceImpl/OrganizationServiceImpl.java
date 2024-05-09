@@ -78,5 +78,15 @@ public class OrganizationServiceImpl implements OrganizationService {
         return organizations.stream().map(OrganizationResponseDto::fromOrganization).collect(Collectors.toList());
     }
 
+    @Override
+    public OrganizationResponseDto editOrganizationName(String organizationName, String organizationId) {
+        Organization organization = organizationRepository.findById(organizationId).orElse(null);
+        if(organization != null) {
+            organization.setOrganizationName(organizationName);
+            return OrganizationResponseDto.fromOrganization(organization);
+        }
+        return null;
+    }
+
 
 }

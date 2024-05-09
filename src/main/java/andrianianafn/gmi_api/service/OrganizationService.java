@@ -11,4 +11,6 @@ public interface OrganizationService {
     OrganizationResponseDto addDepartmentToOrganization(String organizationId,List<String> departmentIds);
 
     List<OrganizationResponseDto> getOrganizationList(String token);
+
+    OrganizationResponseDto editOrganizationName(String organizationName, String organizationId);
 }

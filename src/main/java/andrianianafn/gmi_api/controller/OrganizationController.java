@@ -45,4 +45,9 @@ public class OrganizationController {
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
+
+    @PutMapping("/name/{organization-id}")
+    public ResponseEntity<OrganizationResponseDto> editOrganizationName(@RequestBody OrganizationRequestDto organizationRequestDto, @PathVariable ("organization-id") String organizationId){
+        return new ResponseEntity<>(organizationService.editOrganizationName(organizationRequestDto.getOrganizationName(),organizationId), HttpStatus.OK);
+    }
 }
