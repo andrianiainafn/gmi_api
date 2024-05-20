@@ -41,7 +41,7 @@ public class OrganizationController {
     public ResponseEntity<List<OrganizationResponseDto>> getOrganizations(@RequestHeader (name = HttpHeaders.AUTHORIZATION) String authorizationHeader){
         if (StringUtils.hasText(authorizationHeader) && authorizationHeader.startsWith("Bearer ")) {
             String token = authorizationHeader.substring(7);
-            return new ResponseEntity<>(organizationService.getOrganizationList(token), HttpStatus.CREATED);
+            return new ResponseEntity<>(organizationService.getOrganizationList(token), HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }

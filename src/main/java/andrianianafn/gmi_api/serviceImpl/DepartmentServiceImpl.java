@@ -61,7 +61,10 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     public DepartmentResponseDto createDepartment(String token, DepartmentRequestDto departmentRequestDto) {
-        Organization organization = organizationRepository.findAllByOrganizationOwner_AccountId(authService.decodeToken(token)).get(0);
+        Department departmentFind = accountRepository.findById(authService.decodeToken(token)).get().getDepartment();
+        List<Department> departments = new ArrayList<>();
+        departments.add(departmentFind);
+        Organization organization = organizationRepository.findOrganizationsByDepartmentsContains(departments).get(0);
         List<Account> accounts = accountRepository.findAllById(departmentRequestDto.getUserId());
         Department department = Department.builder()
                 .departmentName(departmentRequestDto.getDepartmentName())

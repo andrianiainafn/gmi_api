@@ -74,7 +74,10 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     @Override
     public List<OrganizationResponseDto> getOrganizationList(String token) {
-        List<Organization> organizations = organizationRepository.findAllByOrganizationOwner_AccountId(authService.decodeToken(token));
+        Department department = accountRepository.findById(authService.decodeToken(token)).get().getDepartment();
+        List<Department> departments = new ArrayList<>();
+        departments.add(department);
+        List<Organization> organizations = organizationRepository.findOrganizationsByDepartmentsContains(departments);
         return organizations.stream().map(OrganizationResponseDto::fromOrganization).collect(Collectors.toList());
     }
 
