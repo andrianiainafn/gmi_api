@@ -59,6 +59,8 @@ public class NotificationServiceImpl implements NotificationService {
         if(account != null){
             Organization organization = account.getDepartment().getOrganization();
             return notificationRepository.findAllByAccount_Department_Organization_OrganizationIdAndNotificationTypeEquals(organization.getOrganizationId(), "request");
+        }else if(account.getDepartment() == null){
+            return new ArrayList<>();
         }
         return new ArrayList<>();
     }
