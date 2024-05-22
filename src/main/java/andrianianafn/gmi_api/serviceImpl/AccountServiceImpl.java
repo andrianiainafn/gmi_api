@@ -191,13 +191,12 @@ public class AccountServiceImpl implements AccountService {
         Role roleSaved = roleRepository.save(role);
         Account account = Account.builder()
                 .createdAt(new Date())
-                .email(createAccountRequest.email())
-                .firstname(createAccountRequest.firstname())
-                .lastname(createAccountRequest.lastname())
-                .lastname(createAccountRequest.lastname())
+                .email(createAccountRequest.getEmail())
+                .firstname(createAccountRequest.getFirstname())
+                .lastname(createAccountRequest.getLastname())
                 .roles(new ArrayList<>())
                 .materialsCreated(new ArrayList<>())
-                .password(passwordEncoder.encode(createAccountRequest.password()))
+                .password(passwordEncoder.encode(createAccountRequest.getPassword()))
                 .build();
         Account accountSaved = accountRepository.save(account);
         accountSaved.getRoles().add(roleSaved);
@@ -206,7 +205,7 @@ public class AccountServiceImpl implements AccountService {
                 .organizationLogo("")
                 .organizationOwner(accountSaved)
                 .roles(new ArrayList<>())
-                .organizationName(createAccountRequest.organizationName())
+                .organizationName(createAccountRequest.getOrganizationName())
                 .createdAt(new Date())
                 .build();
         Organization organizationSaved = organizationRepository.save(organization);

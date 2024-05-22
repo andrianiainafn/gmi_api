@@ -1,10 +1,17 @@
 package andrianianafn.gmi_api.dto.request;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-public record CreateAccountRequest(
-        String firstname,
-        String lastname,
-        String email,
-        String password,
-        String organizationName
-) {
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public  class CreateAccountRequest {
+    private  String firstname;
+    private  String lastname;
+    private  String email;
+    private  String password;
+    private  String organizationName;
 }
