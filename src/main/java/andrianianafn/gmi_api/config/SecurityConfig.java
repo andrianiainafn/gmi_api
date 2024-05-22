@@ -53,8 +53,8 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(auth->auth.requestMatchers("/api/auth/**","/uploads/**","/ws-endpoint/**").permitAll())
-                .authorizeHttpRequests(auth->auth.anyRequest().authenticated())
+//                .authorizeHttpRequests(auth->auth.requestMatchers("/api/auth/**","/uploads/**","/ws-endpoint/**").permitAll())
+//                .authorizeHttpRequests(auth->auth.anyRequest().authenticated())
                 .oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults()))
                 .sessionManagement(sess->sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .httpBasic(Customizer.withDefaults());
