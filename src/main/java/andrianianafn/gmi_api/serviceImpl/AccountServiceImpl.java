@@ -212,6 +212,6 @@ public class AccountServiceImpl implements AccountService {
         organizationSaved.getRoles().add(roleSaved);
         role.getAccount().add(account);
         role.setOrganization(organizationSaved);
-        return null;
+        return AccountInfoResponseDto.fromAccount(account);
     }
 }
