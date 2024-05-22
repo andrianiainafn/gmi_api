@@ -2,6 +2,7 @@ package andrianianafn.gmi_api.controller;
 
 import andrianianafn.gmi_api.dto.request.AccountRequestDto;
 import andrianianafn.gmi_api.dto.request.AddRoleRequestDto;
+import andrianianafn.gmi_api.dto.request.CreateAccountRequest;
 import andrianianafn.gmi_api.dto.request.EditProfileDto;
 import andrianianafn.gmi_api.dto.response.AccountInfoResponseDto;
 import andrianianafn.gmi_api.dto.response.ProfileResponseDto;
@@ -31,6 +32,10 @@ public class AccountController {
     @PostMapping
     public ResponseEntity<AccountInfoResponseDto> createNewAccount(@RequestBody AccountRequestDto accountRequestDto){
         return new ResponseEntity<>(accountService.createNewAccount(accountRequestDto),HttpStatus.CREATED);
+    }
+    @PostMapping("/signin")
+    public ResponseEntity<AccountInfoResponseDto> signin(@RequestBody CreateAccountRequest createAccountRequest){
+        return new ResponseEntity<>(accountService.signin(createAccountRequest),HttpStatus.CREATED);
     }
 
     @GetMapping("/{email-or-name}")

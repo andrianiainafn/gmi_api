@@ -1,6 +1,7 @@
 package andrianianafn.gmi_api.service;
 
 import andrianianafn.gmi_api.dto.request.AccountRequestDto;
+import andrianianafn.gmi_api.dto.request.CreateAccountRequest;
 import andrianianafn.gmi_api.dto.request.EditProfileDto;
 import andrianianafn.gmi_api.dto.response.AccountInfoResponseDto;
 import andrianianafn.gmi_api.dto.response.ProfileResponseDto;
@@ -23,4 +24,6 @@ public interface AccountService {
     AccountInfoResponseDto editAccountInfo(String userId, AccountRequestDto accountRequestDto);
 
     AccountInfoResponseDto editProfile(String token, EditProfileDto editProfileDto) throws IOException;
+
+    AccountInfoResponseDto signin(CreateAccountRequest createAccountRequest);
 }
