@@ -195,6 +195,7 @@ public class AccountServiceImpl implements AccountService {
                 .firstname(createAccountRequest.getFirstname())
                 .lastname(createAccountRequest.getLastname())
                 .roles(new ArrayList<>())
+                .providerType(createAccountRequest.getProviderType())
                 .materialsCreated(new ArrayList<>())
                 .password(passwordEncoder.encode(createAccountRequest.getPassword()))
                 .build();

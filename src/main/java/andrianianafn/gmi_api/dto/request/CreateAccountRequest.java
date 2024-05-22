@@ -14,4 +14,5 @@ public  class CreateAccountRequest {
     private  String email;
     private  String password;
     private  String organizationName;
+    private String providerType;
 }
