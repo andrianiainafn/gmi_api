@@ -21,7 +21,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/ws-endpoint").setAllowedOrigins("http://localhost:3000").withSockJS();
+        registry.addEndpoint("/ws-endpoint").setAllowedOrigins("http://localhost:3000","https://gmiapi-production.up.railway.app").withSockJS();
         WebSocketMessageBrokerConfigurer.super.registerStompEndpoints(registry);
     }
 
