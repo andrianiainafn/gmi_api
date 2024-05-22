@@ -33,10 +33,6 @@ public class AccountController {
     public ResponseEntity<AccountInfoResponseDto> createNewAccount(@RequestBody AccountRequestDto accountRequestDto){
         return new ResponseEntity<>(accountService.createNewAccount(accountRequestDto),HttpStatus.CREATED);
     }
-    @PostMapping("/signin")
-    public ResponseEntity<AccountInfoResponseDto> signin(@RequestBody CreateAccountRequest createAccountRequest){
-        return new ResponseEntity<>(accountService.signin(createAccountRequest),HttpStatus.CREATED);
-    }
 
     @GetMapping("/{email-or-name}")
     public ResponseEntity<List<AccountInfoResponseDto>> searchAccount(@PathVariable ("email-or-name") String emailOrName){
