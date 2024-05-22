@@ -184,35 +184,35 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public AccountInfoResponseDto signin(CreateAccountRequest createAccountRequest) {
-        Role role = Role.builder()
-                .roleName("Admin")
-                .account(new ArrayList<>())
-                .build();
-        Role roleSaved = roleRepository.save(role);
-        Account account = Account.builder()
-                .createdAt(new Date())
-                .email(createAccountRequest.email())
-                .firstname(createAccountRequest.firstname())
-                .lastname(createAccountRequest.lastname())
-                .lastname(createAccountRequest.lastname())
-                .roles(new ArrayList<>())
-                .materialsCreated(new ArrayList<>())
-                .password(passwordEncoder.encode(createAccountRequest.password()))
-                .build();
-        Account accountSaved = accountRepository.save(account);
-        accountSaved.getRoles().add(roleSaved);
-        Organization organization = Organization.builder()
-                .updatedAt(new Date())
-                .organizationLogo("")
-                .organizationOwner(accountSaved)
-                .roles(new ArrayList<>())
-                .organizationName(createAccountRequest.organizationName())
-                .createdAt(new Date())
-                .build();
-        Organization organizationSaved = organizationRepository.save(organization);
-        organizationSaved.getRoles().add(roleSaved);
-        role.setOrganization(organizationSaved);
-        role.getAccount().add(account);
+//        Role role = Role.builder()
+//                .roleName("Admin")
+//                .account(new ArrayList<>())
+//                .build();
+//        Role roleSaved = roleRepository.save(role);
+//        Account account = Account.builder()
+//                .createdAt(new Date())
+//                .email(createAccountRequest.email())
+//                .firstname(createAccountRequest.firstname())
+//                .lastname(createAccountRequest.lastname())
+//                .lastname(createAccountRequest.lastname())
+//                .roles(new ArrayList<>())
+//                .materialsCreated(new ArrayList<>())
+//                .password(passwordEncoder.encode(createAccountRequest.password()))
+//                .build();
+//        Account accountSaved = accountRepository.save(account);
+//        accountSaved.getRoles().add(roleSaved);
+//        Organization organization = Organization.builder()
+//                .updatedAt(new Date())
+//                .organizationLogo("")
+//                .organizationOwner(accountSaved)
+//                .roles(new ArrayList<>())
+//                .organizationName(createAccountRequest.organizationName())
+//                .createdAt(new Date())
+//                .build();
+//        Organization organizationSaved = organizationRepository.save(organization);
+//        organizationSaved.getRoles().add(roleSaved);
+//        role.getAccount().add(account);
+//        role.setOrganization(organizationSaved);
         return null;
     }
 }
