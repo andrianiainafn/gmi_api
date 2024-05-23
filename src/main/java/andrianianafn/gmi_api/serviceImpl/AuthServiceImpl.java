@@ -5,8 +5,12 @@ import andrianianafn.gmi_api.dto.request.ProviderRequestDto;
 import andrianianafn.gmi_api.dto.response.AuthResponseDto;
 import andrianianafn.gmi_api.dto.response.ProviderResponseDto;
 import andrianianafn.gmi_api.entity.Account;
+import andrianianafn.gmi_api.entity.Organization;
+import andrianianafn.gmi_api.entity.Role;
 import andrianianafn.gmi_api.exceptions.RessourceNotFoundException;
 import andrianianafn.gmi_api.repository.AccountRepository;
+import andrianianafn.gmi_api.repository.OrganizationRepository;
+import andrianianafn.gmi_api.repository.RoleRepository;
 import andrianianafn.gmi_api.service.AuthService;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -19,6 +23,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Date;
 
 @Service
 @Transactional
@@ -29,6 +35,8 @@ public class AuthServiceImpl implements AuthService {
     private final AccountRepository accountRepository;
     PasswordEncoder passwordEncoder;
     AuthenticationManager authenticationManager;
+    private final RoleRepository roleRepository;
+    private final OrganizationRepository organizationRepository;
 
     @Override
     public String decodeToken(String token) {
@@ -106,6 +114,11 @@ public class AuthServiceImpl implements AuthService {
         Account account;
         account = accountRepository.findAccountByEmail(providerRequestDto.getEmail());
         if(account == null){
+            Role role = Role.builder()
+                    .roleName("Admin")
+                    .account(new ArrayList<>())
+                    .build();
+            Role roleSaved = roleRepository.save(role);
             account = Account.builder()
                     .email(providerRequestDto.getEmail())
                     .firstname(providerRequestDto.getFirstname())
@@ -114,6 +127,18 @@ public class AuthServiceImpl implements AuthService {
                     .providerType(providerRequestDto.getProviderType())
                     .build();
             Account accountSaved = accountRepository.save(account);
+            Organization organization = Organization.builder()
+                    .updatedAt(new Date())
+                    .organizationLogo("")
+                    .organizationOwner(accountSaved)
+                    .roles(new ArrayList<>())
+                    .organizationName("Mu Organization Name")
+                    .createdAt(new Date())
+                    .build();
+            Organization organizationSaved = organizationRepository.save(organization);
+            organizationSaved.getRoles().add(roleSaved);
+            role.getAccount().add(account);
+            role.setOrganization(organizationSaved);
             return  ProviderResponseDto.builder()
                     .token(this.generateToken("",accountSaved.getEmail(),Instant.now(),true,accountSaved.getAccountId()))
                     .refreshToken(this.generateRefreshToken("",Instant.now(),accountSaved.getEmail()))
