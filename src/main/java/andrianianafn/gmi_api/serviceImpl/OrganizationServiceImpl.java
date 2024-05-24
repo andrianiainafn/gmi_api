@@ -77,6 +77,9 @@ public class OrganizationServiceImpl implements OrganizationService {
         Department department = accountRepository.findById(authService.decodeToken(token)).get().getDepartment();
         List<Department> departments = new ArrayList<>();
         departments.add(department);
+        if(department == null){
+            return organizationRepository.findAllByOrganizationOwner_AccountId(authService.decodeToken(token)).stream().map(OrganizationResponseDto::fromOrganization).collect(Collectors.toList());
+        }
         List<Organization> organizations = organizationRepository.findOrganizationsByDepartmentsContains(departments);
         return organizations.stream().map(OrganizationResponseDto::fromOrganization).collect(Collectors.toList());
     }
