@@ -158,27 +158,27 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public AccountInfoResponseDto editProfile(String token, EditProfileDto editProfileDto) throws IOException {
         MultipartFile file = editProfileDto.getFile();
-    String fileName = file.getOriginalFilename();
+        String fileName = file.getOriginalFilename();
         String uploadPath = "uploads/" + fileName;
         Path path = Paths.get("src/main/resources/static/uploads/");
         if (!Files.exists(path)) {
             Files.createDirectories(path);
         }
-        try (InputStream inputStream = file.getInputStream();
-             OutputStream outputStream = new FileOutputStream(uploadPath)) {
-            int read;
-            byte[] bytes = new byte[1024];
-            while ((read = inputStream.read(bytes)) != -1) {
-                outputStream.write(bytes, 0, read);
-            }
-        }
+//        try (InputStream inputStream = file.getInputStream();
+//             OutputStream outputStream = new FileOutputStream(uploadPath)) {
+//            int read;
+//            byte[] bytes = new byte[1024];
+//            while ((read = inputStream.read(bytes)) != -1) {
+//                outputStream.write(bytes, 0, read);
+//            }
+//        }
         Account account = accountRepository.findById(authService.decodeToken(token)).orElse(null);
-        if(account != null) {
-            account.setFirstname(editProfileDto.getFirstname());
-            account.setLastname(editProfileDto.getLastname());
-            account.setEmail(editProfileDto.getEmail());
-            account.setProfileUrl(uploadPath);
-        }
+//        if(account != null) {
+//            account.setFirstname(editProfileDto.getFirstname());
+//            account.setLastname(editProfileDto.getLastname());
+//            account.setEmail(editProfileDto.getEmail());
+//            account.setProfileUrl(uploadPath);
+//        }
         return AccountInfoResponseDto.fromAccount(account);
     }
 
