@@ -62,16 +62,29 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     public DepartmentResponseDto createDepartment(String token, DepartmentRequestDto departmentRequestDto) {
         Department departmentFind = accountRepository.findById(authService.decodeToken(token)).get().getDepartment();
-        List<Department> departments = new ArrayList<>();
-        departments.add(departmentFind);
-        Organization organization = organizationRepository.findOrganizationsByDepartmentsContains(departments).get(0);
-        List<Account> accounts = accountRepository.findAllById(departmentRequestDto.getUserId());
-        Department department = Department.builder()
-                .departmentName(departmentRequestDto.getDepartmentName())
-                .createdAt(new Date())
-                .updatedAt(new Date())
-                .organization(organization)
-                .build();
+        Organization organization = null;
+        Department department = null;
+        if (departmentFind == null) {
+            department = Department.builder()
+                    .departmentName(departmentRequestDto.getDepartmentName())
+                    .createdAt(new Date())
+                    .updatedAt(new Date())
+                    .organization(organizationRepository.findAllByOrganizationOwner_AccountId(authService.decodeToken(token)).get(0))
+                    .build();
+
+        }else{
+            organization = departmentFind.getOrganization();
+            department = Department.builder()
+                    .departmentName(departmentRequestDto.getDepartmentName())
+                    .createdAt(new Date())
+                    .updatedAt(new Date())
+                    .organization(organization)
+                    .build();
+        }
+        List<Account> accounts = new ArrayList<>();
+        if(!departmentRequestDto.getUserId().isEmpty()){
+             accounts = accountRepository.findAllById(departmentRequestDto.getUserId());
+        }
         Department departmentSaved = departmentRepository.save(department);
         departmentSaved.setAccounts(accounts);
         accounts.forEach(account -> {
