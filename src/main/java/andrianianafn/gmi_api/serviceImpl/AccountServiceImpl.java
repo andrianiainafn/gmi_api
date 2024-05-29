@@ -164,14 +164,14 @@ public class AccountServiceImpl implements AccountService {
         if (!Files.exists(path)) {
             Files.createDirectories(path);
         }
-//        try (InputStream inputStream = file.getInputStream();
-//             OutputStream outputStream = new FileOutputStream(uploadPath)) {
-//            int read;
-//            byte[] bytes = new byte[1024];
-//            while ((read = inputStream.read(bytes)) != -1) {
-//                outputStream.write(bytes, 0, read);
-//            }
-//        }
+        try (InputStream inputStream = file.getInputStream();
+             OutputStream outputStream = new FileOutputStream(uploadPath)) {
+            int read;
+            byte[] bytes = new byte[1024];
+            while ((read = inputStream.read(bytes)) != -1) {
+                outputStream.write(bytes, 0, read);
+            }
+        }
         Account account = accountRepository.findById(authService.decodeToken(token)).orElse(null);
 //        if(account != null) {
 //            account.setFirstname(editProfileDto.getFirstname());
