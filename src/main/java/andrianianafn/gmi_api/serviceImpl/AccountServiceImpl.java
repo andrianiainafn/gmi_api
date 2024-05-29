@@ -178,7 +178,7 @@ public class AccountServiceImpl implements AccountService {
             account.setFirstname(editProfileDto.getFirstname());
             account.setLastname(editProfileDto.getLastname());
             account.setEmail(editProfileDto.getEmail());
-            account.setProfileUrl(uploadPath);
+            account.setProfileUrl("uploads/" + fileName);
         }
         return AccountInfoResponseDto.fromAccount(account);
     }
